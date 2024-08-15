@@ -1,0 +1,43 @@
+<h1 mat-dialog-title class="d-flex align-items-center m-t-12 mr-4 mb-0">
+  <i-tabler name="clock-2" class="icon-24" style="margin-right: 10px;"></i-tabler>
+  <span>Availability Management</span>
+</h1>
+
+<mat-dialog-content>
+  <div class="header-content d-flex align-items-center">
+    <p class="m-b-12">Set available time for {{ data.evaluator.nom }} {{ data.evaluator.prenom }} on {{ data.day | date:'fullDate' }}</p>
+    <div class="custom-tooltip">
+      <button mat-icon-button color="primary" (click)="addTimeRange()">
+        <mat-icon class="icon-btn"> <i-tabler name="alarm-plus" class="icon-16"></i-tabler></mat-icon>
+      </button>
+      <span class="tooltip-text">Add</span>
+    </div>
+  </div>
+  <form [formGroup]="availabilityForm" class="m-t-24">
+    <div formArrayName="timeRanges" class="timeRanges">
+      <div *ngFor="let timeRange of timeRanges.controls; let j = index" [formGroupName]="j" class="time-range-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Start Time</mat-label>
+          <input matInput type="time" formControlName="startTime">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>End Time</mat-label>
+          <input matInput type="time" formControlName="endTime">
+        </mat-form-field>
+        <div class="clock-btns">
+          <div class="custom-tooltip">
+            <button mat-icon-button color="warn" (click)="removeTimeRange(j)">
+              <mat-icon class="icon-btn"> <i-tabler name="alarm-minus" class="icon-16"></i-tabler></mat-icon>
+            </button>
+            <span class="tooltip-text">Remove</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="close()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>

@@ -1,0 +1,47 @@
+.time-range-form{
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+  visibility: hidden;
+  font-size: 10px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 1px 10px;
+  position: absolute;
+  z-index: 1;
+  top: calc(100% - 10px); 
+  left: 60%; 
+  transform: translateX(-50%); 
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.custom-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.clock-btns{
+    display:flex;
+    align-items: center;
+    margin-bottom:20px;
+}
+.dialog-actions{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.timeRanges{
+  text-align: center;
+}
+.header-content{
+  justify-content: space-between;
+}

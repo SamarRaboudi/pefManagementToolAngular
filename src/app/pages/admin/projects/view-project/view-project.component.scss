@@ -1,0 +1,89 @@
+.title{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+.github-logo{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.project-details-container{
+    padding-left: 20px;
+    line-height: 1.5;
+}
+.list{
+    list-style: none;
+    padding-left: 24px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 5px;
+    row-gap: 10px;
+}
+.technology-list{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: baseline;
+    padding-left: 24px;
+    margin: 0;
+}
+.technology-list li{
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+}
+.dialog-actions{
+    display: flex;
+    justify-content: flex-end;
+}
+.technology-logo{
+    height: 20px; 
+    width: 20px; 
+    border-radius: 50%; 
+    margin-right: 5px;
+}
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+  visibility: hidden;
+  font-size: 10px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 1px 5px;
+  position: absolute;
+  z-index: 1;
+  top: calc(100% - 10px); 
+  left: 50%; 
+  transform: translateX(-50%); 
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.custom-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.supervisor-list{
+    list-style: none;
+    padding: 0 5px;
+}
+.collaborator-picture{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  .circled-span{
+    border-radius: 50%;
+    width: 30px;
+    padding: 5px;
+    text-align: center;
+  }

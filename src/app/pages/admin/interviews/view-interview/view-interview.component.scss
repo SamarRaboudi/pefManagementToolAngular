@@ -1,0 +1,288 @@
+@import '../../../../../assets/scss/_variables.scss';
+
+.candidate-card {
+ min-height: 940px;
+}
+
+.picture-div{
+    width:100%;
+    text-align: center;
+}
+.picture-div img{
+    width:130px;
+    height: 130px; 
+    max-width: 100%;
+    border-radius: 50%;
+}
+.email{
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    cursor: pointer;
+}
+.email:hover{
+  color: $primary;
+}
+.info-div {
+    margin-top: 35px;
+}
+.detail-item{
+    display: flex;
+    align-items: center;
+    justify-content: baseline;
+}
+.skills-div{
+    margin-top: 20px;
+}
+.skills-head{
+    align-items: center; 
+    display: flex; 
+    justify-content: space-between;
+}
+
+.skills-list {
+    padding-left: 0; 
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+  }
+  
+  .skill-item {
+    border-radius: 20px; 
+    list-style: none; 
+    margin-bottom: 8px; 
+    position: relative;
+  }
+  .custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+  visibility: hidden;
+  font-size: 10px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 1px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: calc(100% - 10px); 
+  left: 50%; 
+  transform: translateX(-50%); 
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+.custom-tooltip .tooltip-text-user {
+  bottom: calc(100% - 0px); 
+}
+.custom-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.skill-actions{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+  input[type="text"] {
+    flex: 1;
+    margin-right: 8px;
+    width: 100%;
+    height: 40px;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 12px;
+  }
+  input:focus { 
+    outline: none !important;
+    border-color: $primary;
+  }
+  .delete-button { 
+     border: none; 
+     padding: 0;
+    background-color: transparent; 
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: center;
+    margin-right: 0;
+  }
+  
+  .skill-item:hover .delete-button {
+    display: inline-flex;
+  }
+  .supervisors{
+    align-items: flex-start;
+  }
+  .supervisor{
+    padding-top: 8px; 
+    padding-left: 10px;
+  }
+  .collaborator-picture {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+
+  
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+/* expandable-table.component.css */
+.custom-table {
+  width: 100%; 
+  table-layout: fixed; 
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+}
+
+th, td {
+  border: 5px solid $light-primary; 
+  padding: 10px 8px;
+  text-align: center;
+  line-height: 1.5;
+  min-width: 100px;
+}
+
+th{
+    font-weight: 600;
+    color: $primary;
+    font-size: 12px;
+}
+td{
+  font-size: 13px;
+}
+
+.user-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.circled-span {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expanded-row {
+  padding: 10px;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+.chart{
+  padding: 10px 0;
+}
+.chart h4{
+  text-align: center;
+}
+.note-icon{
+  width: 20px;
+  margin-right: 5px;
+}
+.tooltip {
+  visibility: hidden;
+  width: auto;
+  background-color: rgba(0, 0, 0, 0.75);
+  font-size: 10px;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 0px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.candidate-container:hover .tooltip {
+  visibility: visible;
+}
+
+.user-container:hover .tooltip {
+  visibility: visible;
+}
+.evaluated-check {
+  background-color: #28a745;
+  font-size: 13px;
+  color: #fff;
+  border: 1px solid #28a745;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 2px 5px;
+}
+
+.team-action-check {
+  background-color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.evaluate-btn {
+  background-color: #007bff;
+  font-size: 13px;
+  color: #fff;
+  border: 1px solid #007bff; 
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 2px 5px;
+}
+.intern-picture{
+  width: 50px;
+  height: 50px;
+  border-radius:50%
+}
+.custom-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+visibility: hidden;
+font-size: 10px;
+background-color: #555;
+color: #fff;
+text-align: center;
+border-radius: 3px;
+padding: 3px 5px;
+position: absolute;
+z-index: 1;
+bottom: calc(100% - 0px); 
+left: 50%; 
+transform: translateX(-50%); 
+opacity: 0;
+transition: opacity 0.3s;
+white-space: nowrap; 
+}
+
+.custom-tooltip:hover .tooltip-text {
+visibility: visible;
+opacity: 1;
+}
+.view-candidate-btn{
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}

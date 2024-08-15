@@ -1,0 +1,35 @@
+@import '../../../../../assets/scss/_variables.scss';
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.dialog-actions{
+margin-top: 10px;
+   width: 100%;
+   background-color: $success;
+   text-align: center;
+}
+.continue-btn{
+    border: 0;
+    color: $light-success;
+    margin: 0 auto;
+    background-color: $success;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.dialog-content{
+    font-size: 16px;
+    margin-top: 10px;
+    text-align: center;
+}
+p{
+    font-size: 14px;
+}
+.check-icon{
+    padding: 3px;
+    color: $success;
+    font-size: 50px;
+    font-weight: 700;
+}

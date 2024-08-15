@@ -1,0 +1,64 @@
+<!-- edit-limitation.component.html -->
+<h2 mat-dialog-title>Edit Elimination</h2>
+<mat-dialog-content>
+  <form [formGroup]="limitationForm" class="add-form m-t-8">
+    <div class="form-content">
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Name</mat-label>
+            <div class="w-100" [ngClass]="{ 'invalid': limitationForm.get('name')?.invalid && (limitationForm.get('name')?.dirty || limitationForm.get('name')?.touched), 'touched': limitationForm.get('name')?.touched && limitationForm.get('name')?.valid }">
+              <input placeholder="Name" formControlName="name" class="w-100 custom-input" width="100%">
+              <div *ngIf="limitationForm.get('name')?.invalid && (limitationForm.get('name')?.dirty || limitationForm.get('name')?.touched)" class="error-message">{{ getnameErrorMessage(limitationForm.get('name')) }}</div>
+            </div>
+        <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Evaluators</mat-label>
+        <mat-form-field appearance="outline" [style.width]="'100%'">
+          <mat-label>Evaluators</mat-label>
+          <mat-select formControlName="users" multiple> 
+            <mat-option *ngFor="let user of users" [value]="user.id" class="d-flex align-items-center">
+              <div class="supervisor-info">
+                <img *ngIf="user.picture && !user.picture.endsWith('/images/'); else defaultPicture" [src]="user.picture" class="collaborator-picture" alt="Collaborator Picture">
+                <ng-template #defaultPicture>
+                  <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                    {{ user.prenom?.charAt(0) | uppercase }}
+                  </div>
+                </ng-template>
+                <span style="margin-left: 5px;">{{ user.prenom }} {{ user.nom }}</span>
+              </div>
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="limitationForm.get('users')?.invalid && limitationForm.get('users')?.touched">At least one Evaluator is required.</mat-error>
+        </mat-form-field>
+
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Candidates</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Candidates</mat-label>
+        <mat-select formControlName="candidates" multiple> 
+          <mat-option *ngFor="let candidate of candidates" [value]="candidate.id" class="d-flex align-items-center">
+            <div class="supervisor-info">
+              <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture" [src]="candidate.picture" class="collaborator-picture" alt="Collaborator Picture">
+              <ng-template #defaultPicture>
+                <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                  {{ candidate.firstName?.charAt(0) | uppercase }}
+                </div>
+              </ng-template>
+              <span style="margin-left: 5px;">{{ candidate.firstName }} {{ candidate.lastName }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="limitationForm.get('candidates')?.invalid && limitationForm.get('candidates')?.touched">At least one candidate is required.</mat-error>
+      </mat-form-field>
+
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Session</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Sessions</mat-label>
+        <mat-select formControlName="session">
+          <mat-option *ngFor="let session of sessions" [value]="session.id">{{ session.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="limitationForm.get('session')?.invalid && limitationForm.get('session')?.touched">Session is required.</mat-error>
+      </mat-form-field>
+      
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="limitationForm.invalid" (click)="editLimitation()">Edit</button>
+</mat-dialog-actions>

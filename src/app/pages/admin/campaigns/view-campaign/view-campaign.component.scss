@@ -1,0 +1,186 @@
+@import '../../../../../assets/scss/_variables.scss';
+.campaign-container {
+    padding: 13px 30px 30px;
+}
+
+.header {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between ; 
+    margin-bottom: 18px;
+    padding-top: 5px;
+}
+
+.input-campaign-name {
+    background-color: transparent;
+    border: none;
+    font-size: 600;
+    font-size: 15px;
+}
+.header-actions{
+    display: flex;
+    align-items: center;
+}
+.validate-btn {
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 3px;
+}
+.edit-btn{
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.team-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.team-member {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: -5px; /* Adjust the margin to overlap the previous image */
+    overflow: hidden; /* Hide the overlapping part of the image */
+    position: relative;
+}
+
+.team-member img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+.team-member-image:hover img {
+    transform: scale(1.2);
+}
+.evaluators-div:not(:last-child) {
+    border-right: 1px solid $borderColor; 
+}
+
+.evaluation-data {
+    font-size: 13px;
+    padding: 0px 10px;
+    display: flex; 
+    position: relative;
+ 
+}
+.add-button-div{
+    position: absolute;
+    top: 8%;
+    right: 10%;
+}
+.add-button { 
+    cursor: pointer;
+    border: none; 
+    padding: 0;
+    background-color: transparent; 
+}
+.evaluator-data{
+    position: relative;
+    width: 100%;
+}
+.edit-button-div{
+      position: absolute;
+    top: 0;
+    right: -8px;
+    visibility: hidden;
+    transition: opacity 0.3s;
+}
+.edit-button { 
+    cursor: pointer;
+    color: $primary;
+   border: none; 
+   padding: 0;
+  background-color: transparent; 
+ }
+ 
+ .evaluator-data:hover .edit-button {
+    visibility: visible;
+    opacity: 1;
+ }
+ 
+.circled-span {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 2px 3px;
+    text-align: center;
+  }
+.date-div{
+    display: flex;
+    align-items: baseline;
+
+}
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    font-size: 10px;
+    line-height: 1;
+    background-color: #555;
+    color: #fff;
+    text-align: center; 
+    border-radius: 3px;
+    padding: 1px 10px; 
+    position: absolute;
+    z-index: 100;
+    bottom: calc(100% - 4px); 
+    left: 40%; 
+    transform: translateX(-50%); 
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap; 
+}
+.custom-tooltip .space-tooltip{
+    bottom: calc(100% - 1px); 
+    padding: 5px 10px; 
+}
+
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+.collaborator-picture {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+
+  .displayed-picture{
+    width: 30px;
+    height: 28px;
+  }
+  
+  .circled-span-select {
+    border-radius: 50%;
+    width: 20px;
+    padding: 2px 3px;
+    text-align: center;
+  }
+  
+  .evaluator-info {
+    display: flex;
+    align-items: center; 
+  }
+  .validated-check{
+    background-color: $success;
+    font-size: 15px;
+    color: #fff;
+    border: 1px solid $success ;
+    border-radius: 5px;
+    cursor: pointer;
+    padding:5px 10px;
+  }
+
+  
+  
+

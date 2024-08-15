@@ -1,0 +1,37 @@
+<!-- edit-user.component.html -->
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="square-plus" class="icon-24" style="margin-right: 10px;"></i-tabler> Add Collaborator</h2>
+<mat-dialog-content>
+  <form [formGroup]="userForm" class="add-form m-t-8">
+    <div class="form-content">
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">First Name</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': userForm.get('nom')?.invalid && (userForm.get('nom')?.dirty || userForm.get('nom')?.touched), 'touched': userForm.get('nom')?.touched && userForm.get('nom')?.valid }">
+        <input placeholder="First Name" formControlName="nom" class="w-100 custom-input" width="100%">
+        <div *ngIf="userForm.get('nom')?.invalid && (userForm.get('nom')?.dirty || userForm.get('nom')?.touched)" class="error-message">{{ getnomErrorMessage(userForm.get('nom')) }}</div>
+      </div>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Last Name</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': userForm.get('prenom')?.invalid && (userForm.get('prenom')?.dirty || userForm.get('prenom')?.touched), 'touched': userForm.get('prenom')?.touched && userForm.get('prenom')?.valid }">
+        <input placeholder="Last Name" formControlName="prenom" class="w-100 custom-input" width="100%">
+        <div *ngIf="userForm.get('prenom')?.invalid && (userForm.get('prenom')?.dirty || userForm.get('prenom')?.touched)" class="error-message">{{ getprenomErrorMessage(userForm.get('prenom')) }}</div>
+      </div>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Email</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched), 'touched': userForm.get('email')?.touched && userForm.get('email')?.valid }">
+        <input placeholder="Email" formControlName="email" class="w-100 custom-input" width="100%">
+        <div *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)" class="error-message">{{ getEmailErrorMessage(userForm.get('email')) }}</div>
+      </div>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Profil</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Profils</mat-label>
+        <mat-select formControlName="profils" multiple> <!-- Enable multiple selection -->
+          <mat-option *ngFor="let profil of profils" [value]="profil?.id">{{ profil?.titre }}</mat-option>
+
+        </mat-select>
+        <mat-error *ngIf="userForm.get('profils')?.invalid && userForm.get('profils')?.touched">At least one profile is required.</mat-error>
+      </mat-form-field>
+      
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="userForm.invalid" (click)="addUser()">Add</button>
+</mat-dialog-actions>

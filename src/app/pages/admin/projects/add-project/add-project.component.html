@@ -1,0 +1,97 @@
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="square-plus" class="icon-24" style="margin-right: 10px;"></i-tabler> Add Project</h2>
+<mat-dialog-content>
+  <form [formGroup]="projectForm" class="add-form m-t-8">
+    <div class="form-content">
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-24 m-t-12 d-block">Title</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': projectForm.get('title')?.invalid && (projectForm.get('title')?.dirty || projectForm.get('title')?.touched), 'touched': projectForm.get('title')?.touched && projectForm.get('title')?.valid }">
+        <input placeholder="Project's title" formControlName="title" class="w-100 custom-input" width="100%">
+        <div *ngIf="projectForm.get('title')?.invalid && (projectForm.get('title')?.dirty || projectForm.get('title')?.touched)" class="error-message">{{ getTitleErrorMessage(projectForm.get('title')) }}</div>
+      </div>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-24 m-t-24 d-block">Context</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': projectForm.get('context')?.invalid && (projectForm.get('context')?.dirty || projectForm.get('context')?.touched), 'touched': projectForm.get('context')?.touched && projectForm.get('context')?.valid }">
+        <textarea matInput placeholder="Project's context" formControlName="context" class="w-100 custom-input" width="100%" cdkTextareaAutosize cdkAutosizeMaxRows="10" style="min-height: 100px;"></textarea>
+        <div *ngIf="projectForm.get('context')?.invalid && (projectForm.get('context')?.dirty || projectForm.get('context')?.touched)" class="error-message">{{ getContextErrorMessage(projectForm.get('context')) }}</div>
+      </div>
+      <div class="missions-div">
+        <div class="missions-head">
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Missions</mat-label>
+          <div class="custom-tooltip">
+            <button mat-icon-button (click)="addMission()">
+              <mat-icon class="icon-btn">add</mat-icon>
+            </button>
+            <span class="tooltip-text">Add Mission</span>
+          </div>
+        </div>
+        <ul class="missions-list" style="margin-top: 0; padding-top: 0;">
+          <li *ngFor="let mission of missions" class="mission-item" (mouseenter)="showDeleteButton(mission)" (mouseleave)="hideDeleteButton(mission)">
+            <span class="d-flex" style="align-items: flex-start;"> <i-tabler name="arrow-badge-right" class="icon-18 d-flex"></i-tabler> <span class="m-l-4" style="padding-right: 20px;">{{ mission }}</span> </span>
+            
+            <button class="delete-button" (click)="deleteMission(mission)" *ngIf="isHovered(mission)" >
+              <mat-icon color="warn" class="icon-btn m-l-4"><i-tabler name="trash" class="icon-16 d-flex" ></i-tabler></mat-icon>
+            </button>
+          </li>
+        </ul>
+        <div class="mission-input">
+          <textarea matInput type="text" placeholder="Project's missions" formControlName="mission" class="w-100 custom-input" width="100%" cdkTextareaAutosize cdkAutosizeMaxRows="10" style="min-height: 55px;"></textarea>
+        </div>
+      </div>   
+      <div class="missions-div">
+        <div class="missions-head">
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Requirements</mat-label>
+          <div class="custom-tooltip">
+            <button mat-icon-button (click)="addRequirement()">
+              <mat-icon class="icon-btn">add</mat-icon>
+            </button>
+            <span class="tooltip-text">Add Requirement</span>
+          </div>
+        </div>
+        <ul class="missions-list" style="margin-top: 0; padding-top: 0;">
+          <li *ngFor="let requirement of requirements" class="mission-item" (mouseenter)="showDeleteButton(requirement)" (mouseleave)="hideDeleteButton(requirement)">
+            <span class="d-flex" style="align-items: flex-start;"> <i-tabler name="arrow-badge-right" class="icon-18 d-flex"></i-tabler> <span class="m-l-4" style="padding-right: 20px;">{{ requirement }}</span> </span>
+            
+            <button class="delete-button" (click)="deleteRequirement(requirement)" *ngIf="isHovered(requirement)" >
+              <mat-icon color="warn" class="icon-btn m-l-4"><i-tabler name="trash" class="icon-16 d-flex" ></i-tabler></mat-icon>
+            </button>
+          </li>
+        </ul>
+        <div class="mission-input">
+          <textarea matInput type="text" placeholder="Project's requirements" formControlName="requirement" class="w-100 custom-input" width="100%" cdkTextareaAutosize cdkAutosizeMaxRows="10" style="min-height: 55px;"></textarea>
+        </div>
+      </div>  
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-24 m-t-24 d-block">Technologies</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Technologies</mat-label>
+        <mat-select formControlName="technologies" multiple> 
+          <mat-option *ngFor="let technology of technologies" [value]="technology?.id">{{ technology?.label }}</mat-option>
+        </mat-select>
+        <mat-error class="m-t-8" *ngIf="projectForm.get('technologies')?.invalid && projectForm.get('technologies')?.touched">At least one technology is required.</mat-error>
+      </mat-form-field>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-24 m-t-24 d-block">Supervisors</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Supervisors</mat-label>
+        <mat-select formControlName="supervisors" multiple> 
+          <mat-option *ngFor="let supervisor of supervisors" [value]="supervisor.id" class="d-flex align-items-center">
+            <div class="supervisor-info">
+              <img *ngIf="supervisor.picture && !supervisor.picture.endsWith('/images/'); else defaultPicture" [src]="supervisor.picture" class="collaborator-picture" alt="Collaborator Picture">
+              <ng-template #defaultPicture>
+                <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                  {{ supervisor.nom?.charAt(0) | uppercase }}
+                </div>
+              </ng-template>
+              <span style="margin-left: 5px;">{{ supervisor.nom }} {{ supervisor.prenom }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+        <mat-error class="m-t-8"  *ngIf="projectForm.get('supervisors')?.invalid && projectForm.get('supervisors')?.touched">At least one supervisor is required.</mat-error>
+      </mat-form-field>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-24 m-t-24 d-block">Github Repository Link</mat-label>
+      <div class="w-100">
+        <input placeholder="Github repository link" formControlName="github_repostory_link" class="w-100 custom-input" width="100%">
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="projectForm.invalid" (click)="addProject()">Add</button>
+</mat-dialog-actions>

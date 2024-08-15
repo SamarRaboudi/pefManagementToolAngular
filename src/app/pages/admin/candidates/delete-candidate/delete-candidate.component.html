@@ -1,0 +1,8 @@
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="alert-hexagon" class="icon-24" style="margin-right: 10px;"></i-tabler> Delete Candidate</h2>
+<mat-dialog-content>
+  <p class="dialog-content">Would you like to delete the candidate <span>{{ candidate.firstName }} {{ candidate.lastName }}</span> ?</p>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="warn" (click)="deleteCandidate()">Delete</button>
+</mat-dialog-actions>

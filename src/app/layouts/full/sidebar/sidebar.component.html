@@ -1,0 +1,12 @@
+<div class="flex-layout">
+  <div class="branding-container">
+    <app-branding></app-branding>
+  </div>
+  <div class="menu-container">
+    <mat-nav-list class="sidebar-list">
+      <app-nav-item *ngFor="let item of navItems" [item]="item"></app-nav-item>
+    </mat-nav-list>
+  </div>
+  <div class="p-24 m-t-auto">
+  </div>
+</div>

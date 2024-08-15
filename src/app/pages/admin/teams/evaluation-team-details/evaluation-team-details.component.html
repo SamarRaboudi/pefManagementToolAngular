@@ -1,0 +1,113 @@
+<div *ngIf="loading" class="loader">
+    <!-- Add your loading indicator here -->
+    <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div *ngIf="!loading">
+    <h3 class="f-w-400" *ngIf="teamData.length === 0">No evaluation available for this team!</h3>
+    <div *ngIf="teamData.length != 0">
+        <div *ngFor="let campaignsArray of teamData">
+            <mat-card class="cardWithShadow evaluation-container" *ngFor="let campaign of campaignsArray" >
+                <div class="header">
+                    <div class="campaign-info d-flex align-items-center ">
+                        <div class="campaign-name d-flex align-items-center " >
+                            <i-tabler name="calendar-code" class="icon-18" style="margin-right: 5px;"></i-tabler>
+                            <span class="f-s-16 f-w-600">{{ campaign?.name}}</span>
+                        </div>  
+                            <span  class="f-w-600 align-items-center text-error bg-light-error f-s-12 rounded  m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignFinished(campaign?.endDate)" >Finished</span>
+                            <span  class="f-w-600 align-items-center text-success bg-light-success f-s-12 rounded  m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignInProgress(campaign?.startDate, campaign?.endDate)" >In Progress</span>
+                            <span class="f-w-600 align-items-center text-accent bg-light-accentf-s-12 rounded  m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignNotStartedYet(campaign?.startDate)" >Not Started Yet</span>   
+                    </div>
+                    <div class="campaign-date">
+                      <div class="date-info-start">
+                        <div class="date-circle">
+                          {{ campaign?.startDate | date: 'd' }}
+                        </div>
+                        <div class="text-date start-date">
+                          <span  class="month d-block">{{ campaign?.startDate | date: 'MMM' | uppercase }}</span>
+                          <span class="year">{{ campaign?.startDate | date: 'yyyy' }}</span>
+                        </div>
+                      
+                      </div>
+                      <div class="line"></div>
+                      <div class="date-info-end">
+                        <div class="date-circle">
+                          {{ campaign?.endDate | date: 'd' }}
+                        </div>
+                        <div class="text-date end-date">
+                          <span class="month d-block">{{ campaign?.startDate | date: 'MMM' | uppercase }}</span>
+                          <span class="year">{{ campaign?.endDate | date: 'yyyy' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let evaluation of campaign?.evaluations; let i = index; ">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="f-w-600">
+                                <div class="team-member m-l-4">
+                                    <img [src]="evaluation.candidate.picture" alt="Candidate Image" class="candidate-image">
+                                </div>
+                                <div>
+                                    <span class="d-block">{{ evaluation.candidate.firstName }} {{ evaluation.candidate.lastName }}</span>  
+                                    <span class="shadow-none f-w-400 d-flex align-items-center f-s-12" ><i-tabler name="mail-opened" class="icon-12" style="margin-bottom: 6px;"></i-tabler><span class="m-l-4">{{ evaluation.candidate.email }}</span></span> 
+                                </div>              
+                            </mat-panel-title>
+                            <!-- Removed the mat-panel-description section -->
+                        </mat-expansion-panel-header>
+                        <div class="table-container"  style="overflow-x: auto;">
+                            <table class="custom-table">
+                              <thead>
+                                <tr>
+                                  <th>Evaluator</th>
+                                  <th *ngFor="let criteria of evaluationCriteria">{{ criteria.name }}</th>
+                                  <th>Final Score</th>
+                                  <th>Remark</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <ng-container *ngFor="let line of evaluation.evaluationLines; let i = index">
+                                  <tr>
+                                    <td>
+                                      <div class="custom-tooltip">
+                                      <img *ngIf="line.evaluator.picture && !line.evaluator.picture.endsWith('/images/'); else defaultPicture" [src]="line.evaluator.picture" alt="Evaluator picture" class="evaluator-picture">
+                                      <ng-template #defaultPicture>
+                                        <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                          {{ line.evaluator.nom?.charAt(0) | uppercase }}
+                                        </div>
+                                      </ng-template>
+                                      <span class="tooltip-text-evaluator tooltip-text">{{line.evaluator.nom}} {{line.evaluator.prenom}}</span>
+                                  </div>
+                                </td>
+                                    <ng-container *ngFor="let criteria of evaluationCriteria">
+                                      <td [ngStyle]="{'background-color': !line.evaluator.evaluationLineCriteriaGrades.hasOwnProperty(criteria.id) ? '#f2f6fa' : 'transparent'}">{{ criteria && criteria.id && line.evaluator.evaluationLineCriteriaGrades[criteria.id] }}</td>
+                                    </ng-container>
+                                    <td>{{ line.score }}</td>
+                                    <td style="max-width: 60px;">
+                                      <div class="custom-tooltip">
+                                        <button mat-icon-button color="primary" (click)="toggleRowExpansion(i)">
+                                          <mat-icon class="icon-btn">
+                                            <i-tabler name="{{ isRowExpanded(i) ? 'note-off' : 'note' }}" class="icon-20 d-flex"></i-tabler>
+                                          </mat-icon>
+                                        </button>
+                                        <span class="tooltip-text">{{ isRowExpanded(i) ? 'Hide Remark' : 'View Remark' }}</span>                              
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr *ngIf="expandedRowIndices.includes(i)">
+                                    <td [attr.colspan]="columnsToDisplayWithExpand.length">
+                                      <div class="expanded-row">
+                                        <img src="/assets/images/logos/remarques.png" class="note-icon"/>
+                                        {{ line.remark ? line.remark : 'No remark available' }}
+                                      </div>
+                                    </td>
+                                  </tr>                                              
+                                </ng-container>
+                              </tbody>
+                            </table>
+                          </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-card>
+        </div>
+    </div>
+</div>

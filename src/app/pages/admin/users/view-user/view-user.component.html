@@ -1,0 +1,8 @@
+<div class="row" *ngIf="user">
+    <div class="col-lg-4">
+      <mat-card class="cardWithShadow">
+        <mat-card-content class="p-24">
+          <div class="picture-div">
+            <mat-label class="mat-subtitle-2 f-s-16 f-w-600 m-b-8 m-t-12 d-block">{{user.prenom}} {{user.nom}}</mat-label>
+            <span class="f-s-16 m-b-12 email" (click)="sendEmail()"><i-tabler name="mail" class="icon-16" style="margin-right: 5px;"></i-tabler>{{user.email}}</span>
+          </div>

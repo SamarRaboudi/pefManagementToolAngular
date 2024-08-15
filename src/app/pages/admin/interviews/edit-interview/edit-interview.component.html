@@ -1,0 +1,76 @@
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="edit" class="icon-24" style="margin-right: 10px;"></i-tabler> Edit Interview</h2>
+<mat-dialog-content>
+  <form [formGroup]="interviewForm" class="add-form m-t-8">
+    <div class="form-content">
+      <!-- Candidate selection -->
+<!-- Candidate selection -->
+<mat-form-field appearance="outline" [style.width]="'100%'">
+    <mat-label>Candidate</mat-label>
+    <mat-select formControlName="candidate">
+      <mat-option *ngFor="let candidate of candidates" [value]="candidate.id" class="d-flex align-items-center">
+        <div class="supervisor-info">
+          <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture"
+               [src]="candidate.picture" class="collaborator-picture" alt="Candidate Picture">
+          <ng-template #defaultPicture>
+            <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+              {{ candidate.firstName?.charAt(0) | uppercase }}
+            </div>
+          </ng-template>
+          <span style="margin-left: 5px;">{{ candidate.firstName }} {{ candidate.lastName }}</span>
+        </div>
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="interviewForm.get('candidate')?.invalid && interviewForm.get('candidate')?.touched">
+      Candidate is required.
+    </mat-error>
+  </mat-form-field>
+  
+
+      <!-- Users selection -->
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Interviewers</mat-label>
+        <mat-select formControlName="users" multiple>
+          <mat-option *ngFor="let user of users" [value]="user.id" class="d-flex align-items-center">
+            <div class="supervisor-info">
+              <img *ngIf="user.picture && !user.picture.endsWith('/images/'); else defaultPicture"
+                   [src]="user.picture" class="collaborator-picture" alt="User Picture">
+              <ng-template #defaultPicture>
+                <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                  {{ user.prenom?.charAt(0) | uppercase }}
+                </div>
+              </ng-template>
+              <span style="margin-left: 5px;">{{ user.prenom }} {{ user.nom }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="interviewForm.get('users')?.invalid && interviewForm.get('users')?.touched">
+          At least one Interviewer is required.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Interview Date -->
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Interview Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="interviewDay">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="interviewForm.get('interviewDay')?.invalid && interviewForm.get('interviewDay')?.touched">
+          Interview Date is required.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Interview Time -->
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Interview Time</mat-label>
+        <input matInput type="time" formControlName="interviewTime">
+        <mat-error *ngIf="interviewForm.get('interviewTime')?.invalid && interviewForm.get('interviewTime')?.touched">
+          Interview Time is required.
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="interviewForm.invalid" (click)="editInterview()">Edit</button>
+</mat-dialog-actions>

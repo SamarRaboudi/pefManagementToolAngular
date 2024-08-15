@@ -1,0 +1,80 @@
+@import '../../../../../assets/scss/_variables.scss';
+
+.evaluation-container {
+  padding: 10px 30px 30px;
+}
+
+
+.header {
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between ; 
+  margin-bottom: 15px;
+  padding-top: 5px;
+}
+.validate-btn {
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 3px;
+}
+.team-member img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.table-container {
+    overflow-x: auto; 
+    max-width: 100%;
+    padding: 0px 0 35px;
+    margin-top: 5px;
+  }
+.custom-table {
+    border-collapse: collapse;
+  }
+  
+  .custom-table th, .custom-table td {
+    border: 5px solid $light-primary; 
+    padding: 10px 8px;
+    max-width: 100px;
+  }
+  .custom-table th{
+    text-align: center;
+    line-height: 1.5;
+    font-weight: 600;
+    color: $primary;
+  }
+  .custom-table td{
+    text-align: center;
+    line-height: 1.5;
+    font-weight: 400;
+    font-size: 13px;
+  }
+  .remarq-icons{
+    color: $primary;
+    position: relative;
+    width: 100%;
+    padding-left: 25px;
+  }
+  .note-icon{
+    position: absolute;
+    left: 0px;
+    top: -17px;
+  }
+input{
+    border: none;
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 400;
+}  
+textarea {
+  resize: vertical;
+  overflow: auto;
+  border: 3px solid $light-primary; 
+}
+textarea:focus { 
+  outline: none !important;
+  border-color: $light-primary;
+}

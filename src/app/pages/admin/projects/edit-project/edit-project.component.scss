@@ -1,0 +1,107 @@
+@import '../../../../../assets/scss/_variables.scss';
+.add-form{
+    padding: 20px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+.form-content{
+    width: 100%;
+}
+.dialog-actions{
+    display: flex;
+    justify-content: flex-end;
+}
+textarea {
+    resize: vertical;
+    overflow: auto;
+  }
+  textarea:focus { 
+    outline: none !important;
+    border-color: $primary;
+  }
+.missions-head{
+    align-items: center; 
+    display: flex; 
+    justify-content: space-between;
+}
+
+.missions-list {
+    padding-left: 0; 
+  }
+  
+  .mission-item {
+    margin: 0; 
+    width: auto;
+    padding: 8px 0;  
+    list-style: none; 
+    font-weight: 600;
+    position: relative;
+  }
+  .custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+  visibility: hidden;
+  font-size: 10px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 1px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: calc(100% - 10px); 
+  left: 50%; 
+  transform: translateX(-50%); 
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.custom-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.missions-actions{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+  
+  .delete-button {
+    display: none; 
+    position: absolute; 
+    top: 62%; 
+    transform: translateY(-50%);
+    right: 8px; 
+    border: none; 
+    padding: 0;
+    background-color: transparent; 
+    cursor: pointer;
+  }
+  
+  .mission-item:hover .delete-button {
+    display: inline-flex;
+  }
+  .collaborator-picture {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  
+  .circled-span {
+    border-radius: 50%;
+    width: 20px;
+    padding: 2px 3px;
+    text-align: center;
+  }
+  
+  .supervisor-info {
+    display: flex;
+    align-items: center; 
+  }
+  

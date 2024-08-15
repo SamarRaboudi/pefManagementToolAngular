@@ -1,0 +1,383 @@
+<div class="admin-container"  *ngIf="isUserAdmin">
+  <div *ngIf="!isLoadingTopCandidates" class="loader">
+    <!-- Add your loading indicator here -->
+    <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </div>
+  <div *ngIf="isLoadingTopCandidates">
+    <div class="row">
+      <!-- Total Users -->
+      <div class="col-lg-3" >
+        <div class="collaborators header-card m-b-24" >
+          <img src="\..\..\.\assets\images\logos\users.png" alt="User Logo" class="header-logo">
+            <span class="f-s-16 d-block f-w-600 m-t-8">Collaborators</span>
+            <span class="f-s-20 d-block f-w-600 m-t-4">{{usersSize}}</span>
+        </div>
+      </div>
+    
+      <div class="col-lg-3" >
+        <div class="candidates header-card m-b-24">
+          <img src="\..\..\.\assets\images\logos\candidates.png" alt="Candidate Logo" class="header-logo">
+            <span class="f-s-16 d-block f-w-600 m-t-8">Candidates</span>
+            <span class="f-s-20 d-block f-w-600 m-t-4">{{candidatesSize}}</span>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="projects header-card m-b-24">
+          <img src="\..\..\.\assets\images\logos\projects.png" alt="Project Logo" class="header-logo">
+            <span class="f-s-16 d-block f-w-600 m-t-8">Projects</span>
+            <span class="f-s-20 d-block f-w-600 m-t-4">{{projectsSize}}</span>
+        </div>
+      </div>
+      <div class="col-lg-3" >
+        <div class="campaigns header-card m-b-24">
+          <img src="\..\..\.\assets\images\logos\events.png" alt="Campaign Logo" class="header-logo">
+            <span class="f-s-16 d-block f-w-600 m-t-8">Campaigns</span>
+            <span class="f-s-20 d-block f-w-600 m-t-4">{{campaignSize}}</span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="charts" >
+      <div class="chart flex justify-content-center">
+        <div class="d-flex align-items-center justify-content-center">
+          <h4>Top 3 Candidates in {{selectedSessionName}}</h4>
+          <div class="custom-tooltip">
+            <button mat-icon-button [matMenuTriggerFor]="sessionsMenu"  >
+              <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #sessionsMenu="matMenu">
+              <ng-container *ngFor="let session of leaderboardData">
+                  <button mat-menu-item  (click)="selectSession(session)">
+                    {{ session.sessionName }}
+                  </button>
+              </ng-container>
+          </mat-menu>
+            <span class="tooltip-text">Select session</span>                              
+          </div>
+        </div>
+        
+      <div class="container podium" *ngIf="isLoadingTopCandidates">
+        <div class="podium__item">
+          <div class="podium-candidate" *ngIf="podiumItems.length > 1">
+            <img [src]="podiumItems[1].picture" alt="Candidate picture">
+            <p class="podium__city" >{{podiumItems[1].firstName}} {{podiumItems[1].lastName}}</p>
+          </div>
+          <div class="podium__rank second"><img src="\..\..\..\.\assets\images\logos\trophee2.png" alt="Medal logo" class="trophee2-logo"></div>
+        </div>
+        <div class="podium__item">
+          <div class="podium-candidate" *ngIf="podiumItems.length > 0">
+            <img [src]="podiumItems[0].picture" alt="Candidate picture">
+            <p class="podium__city" >{{podiumItems[0].firstName}} {{podiumItems[0].lastName}}</p>
+          </div>
+          <div class="podium__rank first">
+          <img src="\..\..\..\.\assets\images\logos\trophee1.png" alt="Trouphe logo" class="trophee1-logo">
+          </div>
+      </div>
+        <div class="podium__item">
+          <div class="podium-candidate" *ngIf="podiumItems.length > 2">
+            <img [src]="podiumItems[2].picture" alt="Candidate picture">
+            <p class="podium__city" >{{podiumItems[2].firstName}} {{podiumItems[2].lastName}}</p>
+          </div>
+          <div class="podium__rank third"><img src="\..\..\..\.\assets\images\logos\trophee3.png" alt="Medal logo" class="trophee3-logo"></div>
+        </div>
+      </div>
+      <div class="container podium-skeleton" *ngIf="!isLoadingTopCandidates">
+        <div class="podium__item">
+          <div class="podium-candidate" >
+            <div class="candidate-picture-skeleton"></div>
+            <div class="candidate-name-skeleton" ></div>
+          </div>
+          <div class="podium__rank-skeleton second"></div>
+        </div>
+        <div class="podium__item">
+          <div class="podium-candidate" >
+            <div class="candidate-picture-skeleton"></div>
+            <div class="candidate-name-skeleton" ></div>
+          </div>
+          <div class="podium__rank-skeleton first">
+          </div>
+      </div>
+        <div class="podium__item">
+          <div class="podium-candidate" >
+            <div class="candidate-picture-skeleton"></div>
+            <div class="candidate-name-skeleton" ></div>
+          </div>
+          <div class="podium__rank-skeleton third"></div>
+        </div>
+      </div>
+      </div>
+      <div class="chart flex justify-content-center">
+          <h4>Number of Candidates per Session</h4>
+          <p-chart *ngIf="isLoadingCandidatesNumberChart" type="pie" [data]="candidatesNumberchartData" [options]="candidatesNumberchartOptions" />
+          <div class="skeleton-pie-chart" *ngIf="!isLoadingCandidatesNumberChart"></div>
+      </div>
+      <div class="chart flex justify-content-center">
+        <h4>Technologies Distribution in Projects</h4>
+        <p-chart *ngIf="isLoadingTechnologyCountChart" type="doughnut" [data]="technologyCountChartData" [options]="technologyCountChartOptions" />
+        <div class="skeleton-pie-chart" *ngIf="!isLoadingTechnologyCountChart"></div>
+    </div>
+      <div class="chart flex justify-content-center">
+        <h4>Average Scores of Candidates per Session</h4>
+        <p-chart *ngIf="isLoadingAverageScoreChart" type="bar" [data]="averageScoreChartData" [options]="averageScoreChartOptions" />
+        <div *ngIf="!isLoadingAverageScoreChart" class="skeleton-tab-chart"></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="supervisor-container" *ngIf="!isUserAdmin">
+  <div *ngIf="!isLoadingTeamsCharts" class="loader">
+    <!-- Add your loading indicator here -->
+    <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </div>
+
+  <div  *ngIf="isLoadingTeamsCharts && isUserSupervisor" >
+    <div class=" flex justify-content-center ">
+      <div class="d-flex align-items-center justify-content-center">
+        <h4 class="m-b-24">My Teams Progress in  {{selectedSessionName}}</h4>
+        <div class="custom-tooltip">
+          <button mat-icon-button [matMenuTriggerFor]="sessionsMenu"  >
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+          <mat-menu #sessionsMenu="matMenu">
+            <ng-container *ngFor="let sessionArray of teamsData">
+              <ng-container *ngFor="let session of sessionArray">
+                <button mat-menu-item  (click)="selectTeamsSession(session)">
+                  {{ session.sessionName }}
+                </button>
+              </ng-container>
+            </ng-container>
+        </mat-menu>
+          <span class="tooltip-text">Select session</span>                              
+        </div>
+      </div> 
+    
+      <div >
+        <div class="supervisor-teams-charts m-b-12">
+          <ng-container *ngFor="let chartData of teamsChartData; let i = index">
+            <div class="chart flex justify-content-center">
+              <div class="d-flex align-items-center justify-content-center">
+                <h4>{{chartData.teamName}}</h4>
+              </div>
+      
+              <div class="card">
+                <p-chart type="line" [data]="chartData" [options]="teamsChartOptions"></p-chart>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+          <div id="leaderboard" class="col-lg-6">
+            <div class="ribbon"></div>
+            <table class="ranking-table">
+                <tr class="ranking-tr" *ngFor="let team of classifiedCandidates ; let i = index">
+                    <td class="ranking-td number">{{ i + 1 }}</td>
+                    <td class="ranking-td name align-items-center"> <div class="d-flex align-items-center"><img [src]="team.candidate.picture" alt="Candidate picture" class="candidate-picture"><span>{{ team.candidate.firstName }} {{ team.candidate.lastName }}</span></div></td>
+                    <td class="ranking-td points">
+                      {{ team.candidate.averageScore | number:'1.2-2' }} <img *ngIf="i == 0" class="gold-medal" src="https://github.com/malunaridev/Challenges-iCodeThis/blob/master/4-leaderboard/assets/gold-medal.png?raw=true" alt="gold medal"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+      </div> 
+       </div> 
+  </div>
+    <mat-card class="cardWithShadow evaluation-container" *ngIf="evaluatorTeams.length != 0">
+    <div class="header">
+        <div class="campaign-info">
+            <div class="campaign-name d-flex align-items-center">
+                <i-tabler name="calendar-code" class="icon-18" style="margin-right: 5px;"></i-tabler>
+                <span class="f-s-16 f-w-600">{{evaluatorTeams[0]?.campaignName.toUpperCase()}}</span>
+            </div> 
+            <span class="f-s-12" style="margin-left: 20px;">{{evaluatorTeams[0]?.session.toUpperCase()}}</span>      
+        </div>
+        <div class="campaign-date">
+          <div class="date-info-start">
+            <div class="date-circle">
+              {{ evaluatorTeams[0]?.startDate | date: 'd' }}
+            </div>
+            <div class="text-date start-date">
+              <span  class="month d-block">{{ evaluatorTeams[0]?.startDate | date: 'MMM' | uppercase }}</span>
+              <span class="year">{{ evaluatorTeams[0]?.startDate | date: 'yyyy' }}</span>
+            </div>
+          
+          </div>
+          <div class="line"></div>
+          <div class="date-info-end">
+            <div class="date-circle">
+              {{ evaluatorTeams[0]?.endDate | date: 'd' }}
+            </div>
+            <div class="text-date end-date">
+              <span class="month d-block">{{ evaluatorTeams[0]?.startDate | date: 'MMM' | uppercase }}</span>
+              <span class="year">{{ evaluatorTeams[0]?.endDate | date: 'yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+    </div>
+    <mat-accordion class="m-t-12">
+      <mat-expansion-panel *ngFor="let team of teams let i = index" (opened)="teamsPanelOpened(i)" (closed)="teamsPanelClosed(i)" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="f-w-600 d-flex align-items-center">
+            <span class="f-w-600 d-flex align-items-center text-primary bg-light-primary f-s-12 rounded p-4 p-y-4">
+              <i-tabler name="users-group" class="icon-18" style="margin-right: 5px;"></i-tabler>{{team?.name}}
+            </span>
+            <ul class="team-list" *ngIf="!team.panelOpen">
+              <li class="custom-tooltip" *ngFor="let candidate of team.candidates">
+                <div class="team-member">
+                  <div class="team-member-image">
+                    <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture" [src]="candidate.picture" class="candidate-picture" alt="candidate Picture">
+                    <ng-template #defaultPicture>
+                      <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                        {{ candidate.firstName?.charAt(0) | uppercase }}
+                      </div> 
+                    </ng-template>
+                  </div>
+                </div>
+                <span class="tooltip-text">{{candidate.firstName}} {{candidate.lastName}}</span>
+              </li>
+            </ul>
+          </mat-panel-title>
+          
+            <mat-panel-description class="f-w-600" style="justify-content: space-between;">
+                <h4 class="f-w-600 d-flex align-items-center text-primary bg-light-primary f-s-12 rounded" style="padding: 2px 10px;">
+                    <i-tabler name="code" class="icon-18"></i-tabler>
+                    <span class="m-l-4">{{ team.projectName }}</span>
+                </h4>
+                <button  class="evaluate-btn team-action" (click)="navigateToEvaluation(0,team.id)"  *ngIf="!team.isEvaluated"><span>
+                  <span class="d-flex align-items-center"><i-tabler name="clipboard-list" class="icon-12" ></i-tabler><span class="m-l-4">Evaluate</span></span></span>
+               </button>
+               <button  class="evaluated-check team-action-check"  *ngIf="team.isEvaluated"><span>
+                <span class="d-flex align-items-center"><i-tabler name="clipboard-check" class="icon-12" ></i-tabler><span class="m-l-4">Evaluated</span></span></span>
+             </button>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="row evaluation-data">
+            <div class="col-lg-4 evaluators-div">
+                <h3 class="d-flex" ><i-tabler name="users-group" class="icon-18" style="margin-top: 2px;"></i-tabler><span class="m-l-4">Team members:</span></h3>
+                <ul style="padding-left: 0px;" class="m-t-24">
+                    <li *ngFor="let candidate of team.candidates" class="d-flex m-b-24 evaluator-data" >
+                        <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture" [src]="candidate.picture" class="collaborator-picture" alt="Collaborator Picture">
+                        <ng-template #defaultPicture>
+                          <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                            {{ candidate.firstName?.charAt(0) | uppercase }}
+                          </div>
+                        </ng-template>
+                        <div >
+                            <span class="shadow-none f-w-600 d-block" style="margin-left: 8px;">{{ candidate.firstName }} {{ candidate.lastName }}</span>
+                            <span class="shadow-none f-w-400 d-flex align-items-center" style="margin-left: 8px;"><i-tabler name="mail-opened" class="icon-16"></i-tabler><span class="m-l-4">{{ candidate.email }}</span></span>
+                        </div>                  
+                      </li>
+                </ul>
+            </div>
+            <div class="col-lg-4 evaluators-div" >
+                <h3 class="d-flex" ><i-tabler name="users" class="icon-18" style="margin-top: 2px;"></i-tabler><span class="m-l-4">Supervisors:</span></h3>
+                <ul style="padding-left: 0px;" class="m-t-24">
+                    <li *ngFor="let supervisor of team.supervisors" class="d-flex m-b-24 evaluator-data" >
+                        <img *ngIf="supervisor.picture && !supervisor.picture.endsWith('/images/'); else defaultPicture" [src]="supervisor.picture" class="collaborator-picture" alt="Collaborator Picture">
+                        <ng-template #defaultPicture>
+                          <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                            {{ supervisor.nom?.charAt(0) | uppercase }}
+                          </div>
+                        </ng-template>
+                        <div >
+                            <span class="shadow-none f-w-600 d-block" style="margin-left: 8px;">{{ supervisor.nom }} {{ supervisor.prenom }}</span>
+                            <span class="shadow-none f-w-400 d-flex align-items-center" style="margin-left: 8px;"><i-tabler name="mail-opened" class="icon-16"></i-tabler><span class="m-l-4">{{ supervisor.email }}</span></span>
+                        </div>                  
+                      </li>
+                </ul>
+            </div>
+            <div class="col-lg-4 evaluators-div" >
+                <h3 class="d-flex" ><i-tabler name="calendar-event" class="icon-18" style="margin-top: 2px;"></i-tabler><span class="m-l-4">Evaluatoin Date:</span></h3>
+                <div class="date-div">
+                  <span  class="f-w-600  f-s-12 rounded p-4 p-y-4 -flex align-items-center" ><i-tabler name="calendar-time" class="icon-12" ></i-tabler><span class="m-l-4">{{ team.evaluationDate | date: 'yyyy-MM-dd' }}</span></span> 
+                  <span  class="f-w-600  f-s-12 rounded p-4 p-y-4 -flex align-items-center" ><i-tabler name="clock" class="icon-12" ></i-tabler><span class="m-l-4">15:00 PM</span></span>                                                     
+                </div>
+               
+            </div>
+        </div>
+    </mat-expansion-panel >
+    <mat-expansion-panel *ngFor="let team of myTeams let i = index" (opened)="myTeamsPanelOpened(i)" (closed)="myTeamsPanelClosed(i)" hideToggle>
+      <mat-expansion-panel-header>
+          <mat-panel-title class="f-w-600 d-flex align-items-center">
+            <span class="f-w-600 d-flex align-items-center text-accent bg-light-accent f-s-12 rounded p-4 p-y-4"> <i-tabler name="users-group" class="icon-18" style="margin-right: 5px;"></i-tabler>{{team?.name}}</span>
+              <ul class="team-list" *ngIf="!team.panelOpen">
+                  <li class="custom-tooltip"  *ngFor="let candidate of team.candidates">
+                      <div class="team-member">
+                          <div class="team-member-image">
+                              <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture" [src]="candidate.picture" class="candidate-picture" alt="candidate Picture">
+                              <ng-template #defaultPicture>
+                              <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                  {{ candidate.firstName?.charAt(0) | uppercase }}
+                              </div> 
+                              </ng-template>
+                          </div>
+                      </div>
+                      <span class="tooltip-text">{{candidate.firstName}} {{candidate.lastName}}</span>
+                  </li>
+              </ul>
+          </mat-panel-title>
+          <mat-panel-description class="f-w-600" style="justify-content: space-between;">
+              <h4 class="f-w-600 d-flex align-items-center text-accent bg-light-accent f-s-12 rounded" style="padding: 2px 10px;">
+                  <i-tabler name="code" class="icon-18"></i-tabler>
+                  <span class="m-l-4">{{ team.projectName }}</span>
+              </h4>
+              <button  class="evaluate-btn myTeam-action"  (click)="navigateToEvaluation(1,team.id)" *ngIf="!team.isEvaluated"><span>
+                <span class="d-flex align-items-center"><i-tabler name="clipboard-list" class="icon-12" ></i-tabler><span class="m-l-4">Evaluate</span></span></span>
+             </button>
+             <button  class="evaluated-check team-action-check"  *ngIf="team.isEvaluated"><span>
+              <span class="d-flex align-items-center"><i-tabler name="clipboard-check" class="icon-12" ></i-tabler><span class="m-l-4">Evaluated</span></span></span>
+           </button>
+          </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="row evaluation-data">
+          <div class="col-lg-4 evaluators-div">
+              <h3 class="d-flex" ><i-tabler name="users-group" class="icon-18" style="margin-top: 2px;"></i-tabler><span class="m-l-4">Team members:</span></h3>
+              <ul style="padding-left: 0px;" class="m-t-24">
+                  <li *ngFor="let candidate of team.candidates" class="d-flex m-b-24 evaluator-data" >
+                      <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture" [src]="candidate.picture" class="collaborator-picture" alt="Collaborator Picture">
+                      <ng-template #defaultPicture>
+                        <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                          {{ candidate.firstName?.charAt(0) | uppercase }}
+                        </div>
+                      </ng-template>
+                      <div >
+                          <span class="shadow-none f-w-600 d-block" style="margin-left: 8px;">{{ candidate.firstName }} {{ candidate.lastName }}</span>
+                          <span class="shadow-none f-w-400 d-flex align-items-center" style="margin-left: 8px;"><i-tabler name="mail-opened" class="icon-16"></i-tabler><span class="m-l-4">{{ candidate.email }}</span></span>
+                      </div>                  
+                    </li>
+              </ul>
+          </div>
+          <div class="col-lg-4 evaluators-div" >
+              <h3 class="d-flex" ><i-tabler name="users" class="icon-18" style="margin-top: 2px;"></i-tabler><span class="m-l-4">Supervisors:</span></h3>
+              <ul style="padding-left: 0px;" class="m-t-24">
+                  <li *ngFor="let supervisor of team.supervisors" class="d-flex m-b-24 evaluator-data" >
+                      <img *ngIf="supervisor.picture && !supervisor.picture.endsWith('/images/'); else defaultPicture" [src]="supervisor.picture" class="collaborator-picture" alt="Collaborator Picture">
+                      <ng-template #defaultPicture>
+                        <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                          {{ supervisor.nom?.charAt(0) | uppercase }}
+                        </div>
+                      </ng-template>
+                      <div >
+                          <span class="shadow-none f-w-600 d-block" style="margin-left: 8px;">{{ supervisor.nom }} {{ supervisor.prenom }}</span>
+                          <span class="shadow-none f-w-400 d-flex align-items-center" style="margin-left: 8px;"><i-tabler name="mail-opened" class="icon-16"></i-tabler><span class="m-l-4">{{ supervisor.email }}</span></span>
+                      </div>                  
+                    </li>
+              </ul>
+          </div>
+          <div class="col-lg-4 evaluators-div" >
+              <h3 class="d-flex" ><i-tabler name="calendar-event" class="icon-18" style="margin-top: 2px;"></i-tabler><span class="m-l-4">Evaluatoin Date:</span></h3>
+              <div class="date-div">
+                <span  class="f-w-600  f-s-12 rounded p-4 p-y-4 -flex align-items-center" ><i-tabler name="calendar-time" class="icon-12" ></i-tabler><span class="m-l-4">{{ team.evaluationDate | date: 'yyyy-MM-dd' }}</span></span> 
+                <span  class="f-w-600  f-s-12 rounded p-4 p-y-4 -flex align-items-center" ><i-tabler name="clock" class="icon-12" ></i-tabler><span class="m-l-4">12:00 PM</span></span>                                                     
+              </div>
+             
+          </div>
+      </div>
+  </mat-expansion-panel>
+      </mat-accordion>
+</mat-card>
+</div>
+
+
+ 
+
+

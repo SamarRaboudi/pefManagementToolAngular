@@ -1,0 +1,10 @@
+.verification-code-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .verification-code-input {
+    width: calc(25% - 10px); 
+  }
+  

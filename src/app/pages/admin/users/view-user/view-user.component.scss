@@ -1,0 +1,112 @@
+@import '../../../../../assets/scss/_variables.scss';
+.picture-div{
+    width:100%;
+    text-align: center;
+}
+.picture-div img{
+    width:40%;
+    height: auto; 
+    max-width: 100%;
+    border-radius: 10px;
+}
+.email{
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    cursor: pointer;
+}
+.email:hover{
+  color: $primary;
+}
+.info-div {
+    margin-top: 35px;
+}
+.detail-item{
+    display: flex;
+    align-items: center;
+    justify-content: baseline;
+}
+.skills-div{
+    margin-top: 20px;
+}
+.skills-head{
+    align-items: center; 
+    display: flex; 
+    justify-content: space-between;
+}
+
+.skills-list {
+    padding-left: 0; 
+  }
+  
+  .skill-item {
+    margin: 0; 
+    width: auto;
+    padding: 8px 12px; 
+    border: 1px solid $borderformColor; 
+    border-radius: 20px; 
+    list-style: none; 
+    margin-bottom: 8px; 
+    font-weight: 600;
+    position: relative;
+  }
+  .custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+  visibility: hidden;
+  font-size: 10px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 1px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: calc(100% - 10px); 
+  left: 50%; 
+  transform: translateX(-50%); 
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.custom-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.skill-actions{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+  input[type="text"] {
+    flex: 1;
+    padding: 11px;
+    border: 1px solid $borderformColor;
+    border-radius: 20px;
+    margin-right: 8px;
+    width: 100%;
+  }
+  .delete-button {
+    display: none; 
+    position: absolute; 
+    top: 62%; 
+    transform: translateY(-50%);
+    right: 8px; 
+    border: none; 
+    padding: 0;
+    background-color: transparent; 
+    cursor: pointer;
+  }
+  
+  .skill-item:hover .delete-button {
+    display: inline-flex;
+  }
+
+  
+
+  

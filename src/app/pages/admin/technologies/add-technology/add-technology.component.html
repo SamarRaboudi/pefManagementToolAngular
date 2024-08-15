@@ -1,0 +1,29 @@
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="square-plus" class="icon-24" style="margin-right: 10px;"></i-tabler> Add Technology</h2>
+<mat-dialog-content>
+  <p-toast />
+  <form [formGroup]="technologyForm" class="add-form m-t-8">
+    <div class="form-logo" >
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Logo</mat-label>
+      <div class="wrapper">
+      <div class="image">
+      <img [src]="photoLink" style="display: none" onload="this.style.display=''">
+        </div>
+        <button mat-icon-button id="custom-btn" (click)="file.click()">
+          <mat-icon class="icon-btn"><i-tabler name="upload" class="icon-18 d-flex"></i-tabler></mat-icon>
+        </button>
+    </div>
+      <input id="default-btn" type="file" hidden accept="image/*" #file (change)="onFileChanged($event)">
+    </div>
+    <div class="form-content">
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Label</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': technologyForm.get('label')?.invalid && (technologyForm.get('label')?.dirty || technologyForm.get('label')?.touched), 'touched': technologyForm.get('label')?.touched && technologyForm.get('label')?.valid }">
+        <input placeholder="Technology's label" formControlName="label" class="w-100 custom-input" width="100%">
+        <div *ngIf="technologyForm.get('label')?.invalid && (technologyForm.get('label')?.dirty || technologyForm.get('label')?.touched)" class="error-message">{{ getLabelErrorMessage(technologyForm.get('label')) }}</div>
+      </div>
+    </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="technologyForm.invalid" (click)="addTechnology()">Add</button>
+</mat-dialog-actions>

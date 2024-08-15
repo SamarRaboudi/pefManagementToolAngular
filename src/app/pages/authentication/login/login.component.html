@@ -1,0 +1,39 @@
+<div class="blank-layout-container justify-content-center align-items-center bg-light-primary">
+  <div class="position-relative row w-100 h-100 bg-gredient justify-content-center">
+    <div class="col-lg-4 d-flex align-items-center">
+      <mat-card class="cardWithShadow boxed-auth">
+        <mat-card-content class="p-32">
+          <div class="text-center">
+            <a [routerLink]="['/dashboard']">
+              <img src="./assets/images/logos/logo_talan.png" class="align-middle" width="30%" height="auto" alt="logo" />
+            </a>
+          </div>
+
+          <form class="m-t-30" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Email</mat-label>
+            <div class="w-100" [ngClass]="{ 'invalid': loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched), 'touched': loginForm.get('email')?.touched && loginForm.get('email')?.valid }">
+              <input placeholder="pat@example.com" formControlName="email" class="w-100 custom-input">
+              <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="error-message">{{ getEmailErrorMessage(loginForm.get('email')) }}</div>
+            </div>                                              
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Password</mat-label>
+            <div class="w-100" [ngClass]="{ 'invalid': loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched), 'touched': loginForm.get('password')?.touched && loginForm.get('password')?.valid }">
+              <div class="password-input-container">
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" class="w-100 custom-input password-input">
+                <a class="eye-icon" mat-icon-button matSuffix (click)="togglePasswordVisibility()" [attr.aria-label]="hide ? 'Hide password' : 'Show password'">
+                  <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </a>
+              </div>
+              <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="error-message">{{ getPasswordErrorMessage(loginForm.get('password')) }}</div>
+            </div>
+
+            <div class="d-flex align-items-center m-b-24 m-t-12">
+              <a [routerLink]="['/authentication/forgot-password']" class="text-primary f-w-600 text-decoration-none m-l-auto f-s-14">Forgot Password ?</a>
+            </div>
+            <button mat-flat-button color="primary" class="w-100" [disabled]="!loginForm.valid">Sign In</button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<p-toast />

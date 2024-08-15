@@ -1,0 +1,99 @@
+<div *ngIf="loading" class="loader-container">
+    <div class="loader">
+        <!-- Add your loading indicator here -->
+        <div class="lds-default">
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!loading">
+        <h3 class="f-w-400" *ngIf="!interviewData || interviewData.length === 0">No interview available for this candidate!</h3>
+        <div *ngIf="interviewData && interviewData.length !== 0">
+            <div class="interview-container" *ngFor="let interview of interviewData">
+                <div class="interview-container" *ngFor="let interv of interview">
+                                <div class="m-b-24">
+                                    <div class="f-w-600 d-flex">
+                                        <div class="candidate-container">
+                                            <img *ngIf="interv.candidate && interv.candidate.picture && !interv.candidate.picture.endsWith('/images/'); else defaultCandidatePicture"
+                                            [src]="interv.candidate.picture" class="intern-picture" alt="Candidate Picture">
+                                        <ng-template #defaultCandidatePicture>
+                                            <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                                {{ interv.candidate?.firstName?.charAt(0) | uppercase }}
+                                            </div>
+                                        </ng-template>
+                                        </div>
+                                        <div class="m-l-12">
+                                            <div class="d-flex align-items-center">
+                                                <span class="d-block" style="white-space: nowrap; ">{{interv.candidate.firstName}} {{interv.candidate.lastName}}</span> 
+                                                <div class="custom-tooltip m-t-4">
+                                                    <button class="view-candidate-btn" (click)="openCandidateDetailsInNewTab(interv.candidate.id)">
+                                                    <i-tabler name="arrow-right" class="icon-16 d-flex"></i-tabler>
+                                                  </button>          
+                                                    <span class="tooltip-text">View Candidate Details</span>
+                                                </div>
+                                            </div>
+                                            <span class="shadow-none f-w-400 d-flex align-items-center f-s-12" ><i-tabler name="mail-opened" class="icon-12" style="margin-bottom: 6px;"></i-tabler><span class="m-l-4">{{interv.candidate.email}}</span></span> 
+                                        </div>                   
+                                    </div>
+                                </div>
+                            <div class="table-container" style="overflow-x: auto;">
+                                <table class="custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Interviewer</th>        
+                                            <th *ngFor="let criteria of evaluationCriteria">{{ criteria.name }}</th>
+                                            <th>Remark</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let line of interv.interviewLines; let i = index">
+    
+                                            <tr>
+                                                <td>
+                                                    <div class="custom-tooltip">
+                                                        <img *ngIf="line.user.picture && !line.user.picture.endsWith('/images/'); else defaultPicture"
+                                                            [src]="line.user.picture" alt="User picture" class="user-picture">
+                                                        <ng-template #defaultPicture>
+                                                            <div
+                                                                class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                                                {{ line.user.nom?.charAt(0) | uppercase }}
+                                                            </div>
+                                                        </ng-template>
+                                                        <span class="tooltip-text-user tooltip-text">{{ line.user.nom }}
+                                                            {{ line.user.prenom }}</span>
+                                                    </div>
+                                                </td>
+                                                <ng-container *ngFor="let criteria of evaluationCriteria">
+                                                    <td [ngStyle]="{'background-color': !line.user.interviewLineCriteriaGrades.hasOwnProperty(criteria.id) ? '#f2f6fa' : 'transparent'}">{{ criteria && criteria.id && line.user.interviewLineCriteriaGrades[criteria.id] }}</td>
+                                                </ng-container>
+                                                
+                                                <td style="max-width: 60px;">
+                                                    <div class="custom-tooltip">
+                                                        <button mat-icon-button color="primary"
+                                                            (click)="toggleRowExpansion(i)">
+                                                            <mat-icon class="icon-btn">
+                                                                <i-tabler name="{{ isRowExpanded(i) ? 'note-off' : 'note' }}"
+                                                                    class="icon-20 d-flex"></i-tabler>
+                                                            </mat-icon>
+                                                        </button>
+                                                        <span class="tooltip-text">{{ isRowExpanded(i) ? 'Hide Remark' : 'View Remark' }}</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="expandedRowIndices.includes(i)">
+                                                <td [attr.colspan]="columnsToDisplayWithExpand.length">
+                                                    <div class="expanded-row">
+                                                        <img src="/assets/images/logos/remarques.png" class="note-icon" />
+                                                        {{ line.remark ? line.remark : 'No remark available' }}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+            </div>
+        </div>
+</div>

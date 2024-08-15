@@ -1,0 +1,36 @@
+@import '../../../../../assets/scss/_variables.scss';
+.add-form{
+    padding: 20px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+.form-content{
+    width: 100%;
+}
+.dialog-actions{
+    display: flex;
+    justify-content: flex-end;
+}
+.collaborator-picture {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  
+  .circled-span {
+    border-radius: 50%;
+    width: 20px;
+    padding: 2px 3px;
+    text-align: center;
+  }
+  
+  .supervisor-info {
+    display: flex;
+    align-items: center; 
+  }
+
+
+
+
+

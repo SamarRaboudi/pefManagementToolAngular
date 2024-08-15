@@ -1,0 +1,148 @@
+<div *ngIf="loading" class="loader">
+    <!-- Add your loading indicator here -->
+    <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </div>
+  <div *ngIf="!loading">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+        <form class="example-form">
+            <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Search</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input type="search" matInput (input)="applyFilter($event)">   
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="m-l-12">
+                <mat-label>Filter by Session</mat-label>
+                <mat-select (selectionChange)="filterBySession($event.value)">
+                  <mat-option *ngFor="let session of sessions" [value]="session.id">{{ session.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            <!-- Other filter controls if needed -->
+        </form>
+        <div class="header-actions" >
+            <button mat-raised-button color="accent" class="add-btn"  [routerLink]="['/dashboard/admin/interviews-list']"><i-tabler name="table" class="icon-12"></i-tabler><span class="m-l-4">View all Details</span></button>
+            <button *ngIf="isUserAdmin" mat-raised-button color="primary" class="add-btn m-l-4" (click)="openAddDialog()"><span>+</span> Add Interview</button>
+        </div>
+    </div>
+    
+    <div>
+        <table mat-table [dataSource]="dataSource" class="demo-table">
+            <!-- Table headers -->
+            <ng-container matColumnDef="{{ column }}" *ngFor="let column of displayedColumns">
+                <th mat-header-cell *matHeaderCellDef class="column-title">{{ column === 'users' ? 'Interviewers' : column.charAt(0).toUpperCase() + column.slice(1) }}</th>
+                <td mat-cell *matCellDef="let element" class="column-content">
+                    <!-- Column content -->
+                    <ng-container *ngIf="column === 'id'; else otherColumns">
+                        {{ element[column] }}
+                    </ng-container>
+                    <ng-template #otherColumns>
+                        <!-- If it's not the 'id' column -->
+                        <ng-container *ngIf="column === 'users'">
+                            <!-- Display related users -->
+                            <div class="user-cell">
+                                <div class="d-flex" style="justify-content: center;">
+                                    <ng-container *ngFor="let user of element.interviewLines">
+                                        <div class="user-container">
+                                            <!-- Adjust user display according to your requirement -->
+                                            <!-- For example, display user's name and picture -->
+                                            <img *ngIf="user.user.picture && !user.user.picture.endsWith('/images/'); else defaultUserPicture"
+                                                [src]="user.user.picture" class="user-picture" alt="User Picture">
+                                            <ng-template #defaultUserPicture>
+                                                <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                                    {{ user.user.prenom?.charAt(0) | uppercase }}
+                                                </div>
+                                            </ng-template>
+                                            <span class="tooltip">{{ user.user.prenom }} {{ user.user.prenom }}</span>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <!-- If it's the 'candidate' column -->
+                        <ng-container *ngIf="column === 'candidate'">
+                                <div class="d-flex" style="justify-content: center;">
+                                    <div class="candidate-container">
+                                        <!-- Adjust candidate display according to your requirement -->
+                                        <!-- For example, display candidate's name and picture -->
+                                        <img *ngIf="element.candidate && element.candidate.picture && !element.candidate.picture.endsWith('/images/'); else defaultCandidatePicture"
+                                            [src]="element.candidate.picture" class="candidate-picture" alt="Candidate Picture">
+                                        <ng-template #defaultCandidatePicture>
+                                            <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                                {{ element.candidate?.firstName?.charAt(0) | uppercase }}
+                                            </div>
+                                        </ng-template>
+                                        <span class="tooltip">{{ element.candidate?.firstName }} {{ element.candidate?.lastName }}</span>
+                                    </div>
+                            </div>
+                        </ng-container>
+                        <!-- If it's the 'interviewDay' column -->
+                        <ng-container *ngIf="column === 'interviewDay'">
+                            {{ element[column] | date: 'mediumDate' }}
+                        </ng-container>
+                        <!-- If it's the 'interviewTime' column -->
+                        <ng-container *ngIf="column === 'interviewTime'">
+                            {{ element[column] | date: 'HH:mm' }}
+                        </ng-container>
+                                <!-- Action column -->
+                        <!-- If it's the 'candidate' column -->
+                        <ng-container *ngIf="loggedInUser">
+                        <ng-container *ngIf="column === 'action'">
+                            <div class="action-cell">
+                                <div class="d-flex" style="justify-content: center;">
+                                    <div class="action-container">
+                                        <div class="custom-tooltip">
+                                            <button mat-icon-button color="primary" [routerLink]="['/dashboard/admin/interviews', element.id]">
+                                                <mat-icon class="icon-btn"><i-tabler name="list-details" class="icon-18 d-flex"></i-tabler></mat-icon>
+                                            </button>    
+                                            <span class="tooltip-text">View</span>
+                                        </div>
+                                        <div class="custom-tooltip">
+                                            <button mat-icon-button color="warn" *ngIf="shouldDisplayEvaluateButton(element)"  [routerLink]="['/dashboard/admin/interviews', element.id,this.loggedInUser.id]">
+                                                <mat-icon class="icon-btn"><i-tabler name="clipboard-list" class="icon-20 d-flex"></i-tabler></mat-icon>
+                                            </button>    
+                                            <span class="tooltip-text">Evaluate</span>
+                                        </div>
+                                        <div class="custom-tooltip">
+                                            <button mat-icon-button color="accent"  *ngIf="shouldDisplayEvaluatedButton(element)">
+                                                <mat-icon class="icon-btn"><i-tabler name="clipboard-list" class="icon-20 d-flex"></i-tabler></mat-icon>
+                                            </button>    
+                                            <span class="tooltip-text">Evaluated</span>
+                                        </div>
+                                        <!-- <div class="custom-tooltip">
+                                            <button mat-icon-button color="primary" *ngIf="shouldDisplayValidatedByOthersButton(element)">
+                                                <mat-icon class="icon-btn"><i-tabler name="clipboard-list" class="icon-20 d-flex"></i-tabler></mat-icon>
+                                            </button>    
+                                            <span class="tooltip-text">Evaluated</span>
+                                        </div> -->
+                                        <div class="custom-tooltip" *ngIf="isUserAdmin">
+                                            <button mat-icon-button color="accent" (click)="openEditDialog(element)">
+                                                <mat-icon class="icon-btn"><i-tabler name="edit" class="icon-18 d-flex"></i-tabler></mat-icon>
+                                            </button>
+                                            <span class="tooltip-text">Edit</span>
+                                        </div>
+                                        <div class="custom-tooltip" *ngIf="isUserAdmin">
+                                            <button mat-icon-button color="warn"  (click)="openDeleteDialog(element)">
+                                                <mat-icon class="icon-btn"><i-tabler name="square-x" class="icon-18 d-flex"></i-tabler></mat-icon>
+                                            </button>
+                                            <span class="tooltip-text">Remove</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        </ng-container>
+                    </ng-template>
+                </td>
+            </ng-container>
+    
+    
+    
+            <!-- Table rows -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of interviews"
+            style="margin-top: 20px;">
+        </mat-paginator>
+    </div>
+    <p-toast />   
+</div>

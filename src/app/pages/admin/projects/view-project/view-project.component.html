@@ -1,0 +1,56 @@
+<h2 mat-dialog-title class="title">
+        <a [href]="project.githubRepostoryLink"  target="_blank"><img  src="\..\..\..\.\assets\images\logos\github.png" alt="github logo" class="github-logo"></a>          
+    {{ project.title }}
+</h2>
+<mat-dialog-content>
+    <div class="project-details-container">
+        <!-- Context -->
+        <div class="project-section">
+            <mat-label class="mat-subtitle-2 f-s-16 f-w-600 m-b-12 m-t-24 d-flex align-items-center"><i-tabler name="clipboard-text" class="icon-18 d-flex"></i-tabler><span class="m-l-4">Context</span></mat-label>
+            <p class="m-l-24">{{ project.context }}</p>
+        </div>
+
+        <!-- Missions -->
+        <div class="project-section">
+            <mat-label class="mat-subtitle-2 f-s-16 f-w-600 m-b-12 m-t-24 d-flex align-items-center"><i-tabler name="license" class="icon-18 d-flex"></i-tabler><span class="m-l-4">Missions</span></mat-label>
+            <ul>
+                <li class="m-b-8" *ngFor="let mission of project.missions">{{ mission }}</li>
+            </ul>
+        </div>
+
+        <!-- Requirements -->
+        <div class="project-section">
+            <mat-label class="mat-subtitle-2 f-s-16 f-w-600 m-b-12 m-t-24 d-flex align-items-center"><i-tabler name="award" class="icon-18 d-flex"></i-tabler><span class="m-l-4">Requirements</span></mat-label>
+            <ul class="list">
+                <li *ngFor="let requirement of project.requirements" class="m-b-8"><span class="bg-light-primary text-primary  rounded f-w-600 p-8 p-y-4 f-s-12">{{ requirement }}</span></li>
+            </ul>
+        </div>
+
+        <!-- Technologies -->
+        <div class="project-section">
+            <mat-label class="mat-subtitle-2 f-s-16 f-w-600 m-b-12 m-t-24 d-flex align-items-center"><i-tabler name="brand-vscode" class="icon-18 d-flex"></i-tabler><span class="m-l-4">Technologies</span></mat-label>
+            <ul class="technology-list">
+                <li *ngFor="let technology of project.technologies"><img [src]="technology.logo" alt="{{technology.label}}" class="technology-logo" ><span style="margin-right: 5px;">{{ technology.label }}</span>/</li>
+            </ul>
+        </div>
+
+        <!-- Supervisors -->
+        <div class="project-section">
+            <mat-label class="mat-subtitle-2 f-s-16 f-w-600 m-b-12 m-t-24 d-flex align-items-center"><i-tabler name="user" class="icon-18 d-flex"></i-tabler><span class="m-l-4">Supervisors</span></mat-label>
+            <ul class="supervisor-list ">
+                <li *ngFor="let supervisor of project.supervisor" class="d-flex align-items-center p-t-8 p-b-8" >
+                        <img *ngIf="supervisor.picture && !supervisor.picture.endsWith('/images/'); else defaultPicture" [src]="supervisor.picture" class="collaborator-picture" alt="Collaborator Picture">
+                      <ng-template #defaultPicture>
+                        <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                          {{ supervisor.nom?.charAt(0) | uppercase }}
+                        </div>
+                      </ng-template>
+                    <span style="margin-left: 5px;" >{{ supervisor.prenom }} {{ supervisor.nom }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  </mat-dialog-actions>

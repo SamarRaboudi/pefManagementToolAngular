@@ -1,0 +1,39 @@
+@import '../../../../../assets/scss/_variables.scss';
+.add-form{
+    padding: 10px 10px 0;
+}
+.wrapper{
+    position: relative;
+    height: 140px;
+    width: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin: 0 auto;
+    background-color: var(--fieldLightGray);
+    border-radius: 5px;
+    border: 1px solid $borderformColor;
+    border-radius: 5px;
+}
+.wrapper .image{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.wrapper .image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.dialog-actions{
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+

@@ -1,0 +1,86 @@
+
+<div *ngIf="loading" class="loader">
+    <!-- Add your loading indicator here -->
+    <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </div>
+ <div *ngIf="!loading">
+    <div class="header">
+        <span class="d-flex align-items-center f-s-14 f-w-400">{{ selectedSessionName }} <i-tabler name="arrow-badge-right" class="icon-16" style="margin:0px 5px;"></i-tabler> {{ selectedCampaignName }}</span>
+        <div class="header-action">
+            <button mat-raised-button color="accent" (click)="generatePDF()"><span>
+                <span class="d-flex align-items-center"><i-tabler name="printer" class="icon-16" ></i-tabler><span class="m-l-8">Print</span></span></span>
+         </button>
+            <button class="m-l-4" mat-raised-button color="primary" [matMenuTriggerFor]="sessionsMenu" ><span>
+                <span class="d-flex align-items-center"><i-tabler name="select" class="icon-16" ></i-tabler><span class="m-l-8">Select</span></span></span>
+         </button>
+            <mat-menu #sessionsMenu="matMenu">
+                <ng-container *ngFor="let session of leaderboardData">
+                    <button mat-menu-item [matMenuTriggerFor]="sessionMenu" (click)="selectSession(session)">
+                        {{ session.sessionName }}
+                    </button>
+                    <mat-menu #sessionMenu="matMenu">
+                        <button mat-menu-item *ngFor="let campaign of session.campaigns" (click)="selectCampaign(campaign)">
+                            {{ campaign.name }}
+                        </button>
+                    </mat-menu>
+                </ng-container>
+            </mat-menu>
+        </div>
+    </div>
+    <div >
+        <div class="charts" id="first-printed-container">
+            <div class="chart">
+                <h4>General Scores Average per Campaign in {{ selectedSessionName }}</h4>
+                <p-chart type="bar" [data]="candidatesAveargesScoreschartData" [options]="candidatesAveargesScoreschartOptions" />
+            </div>
+            <div class="chart">
+                <h4>General Criteria Averages per Campaign in {{ selectedSessionName }}</h4>
+                <p-chart type="line" [data]="criteriaAveragesChartData" [options]="criteriaAveragesChartOptions" />
+            </div>
+            <div class="chart flex justify-content-center">
+                <h4>General Criteria Averages Across All Campaigns in {{ selectedSessionName }}</h4>
+                <p-chart type="polarArea" [data]="criteriaGeneralAveragesChartData" [options]="criteriaGeneralAveragesChartOptions" />
+            </div>
+            <div class="chart flex justify-content-center">
+                <h4>Performance Summary of Participants in {{ selectedCampaignName }} of {{ selectedSessionName }} </h4>
+                <p-chart type="pie" [data]="candidatesScoreComparisonChartData" [options]="candidatesScoreComparisonChartOptions" />
+            </div>
+        </div>
+        <div class="leaderboard-container chart"  id="second-printed-container">
+            <div class="d-flex align-items-center justify-content-center"  >
+                <h4 >Leaderboard of Candidates in {{ selectedCampaignName }} of the {{ selectedSessionName }} </h4>
+                  <div class="custom-tooltip" *ngIf="!showPrint">
+                    <button mat-icon-button class="m-l-4"  (click)="toggleCandidatesDisplay()">
+                      <mat-icon class="icon-btn">
+                        <i-tabler name="{{ showAllCandidates ? 'arrow-badge-up' : 'arrow-badge-down' }}" class="icon-24 d-flex"></i-tabler>
+                      </mat-icon>
+                    </button>
+                    <span class="tooltip-text">{{ showAllCandidates ? 'Show Top 5 Candidates' : 'Show All Candidates' }}</span>                              
+                  </div>
+            </div>
+            <div class="leaderboard">
+                <div class="row member-div" >
+                    <h4 class="col-lg-2 d-flex align-items-center"><i-tabler name="number" class="icon-24" style="margin-right: 5px;"></i-tabler></h4>
+                    <h4 class="col-lg-5 d-flex align-items-center"><i-tabler name="user-code" class="icon-18" style="margin-right: 5px;"></i-tabler>Candidate</h4>
+                    <h4 class="col-lg-3 d-flex align-items-center"><i-tabler name="users-group" class="icon-18" style="margin-right: 5px;"></i-tabler>Team</h4>
+                    <h4 class="col-lg-2 d-flex align-items-center" style="justify-content: end;"><i-tabler name="math-x-divide-y-2" class="icon-18"style="margin-right: 5px;" ></i-tabler>Score</h4>
+                </div>
+                <div *ngFor="let candidate of selectedCampaign?.leaderboard.slice(0, showAllCandidates ? selectedCampaign?.leaderboard.length : 5); let i = index" class="member-div row">
+                    <h3 class="member-number col-lg-2">{{ i + 1 }}.</h3>
+                    <div class="member-data d-flex align-items-center col-lg-5" *ngIf="!showPrint">
+                        <img [src]="candidate.picture" alt="Candidate picture" class="candidate-picture" >
+                        <p>{{ candidate.firstName }} {{ candidate.lastName }}</p>
+                        <img *ngIf="i < 3" [src]="'assets/images/logos/medaille' + (i + 1) + '.png'" alt="Medal-logo" class="medal-logo">
+                    </div>
+                    <div class="member-data col-lg-5" *ngIf="showPrint">
+                        <p>{{ candidate.firstName }} {{ candidate.lastName }}</p>
+                    </div>
+                    <p class="col-lg-3" style="padding-left: 28px;"> {{ candidate.team }}</p>
+                    <h3 class="score col-lg-2">{{ candidate.score }}</h3>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+

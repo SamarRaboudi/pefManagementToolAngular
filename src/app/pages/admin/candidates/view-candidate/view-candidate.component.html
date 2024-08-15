@@ -1,0 +1,254 @@
+
+<div *ngIf="loading" class="loader">
+  <!-- Add your loading indicator here -->
+  <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div *ngIf="!loading">
+  <div class="header-action">
+    <button mat-raised-button color="primary" (click)="generatePDF()"><span>
+        <span class="d-flex align-items-center"><i-tabler name="printer" class="icon-16" ></i-tabler><span class="m-l-8">Print to PDF</span></span></span>
+  </button>
+  </div>
+  <div class="row" >
+    <div class="col-lg-4">
+      <mat-card class="cardWithShadow candidate-card">
+        <mat-card-content class="p-24">
+          <div class="picture-div">
+            <img [src]="photoLink">
+            <mat-label class="mat-subtitle-2 f-s-16 f-w-600 m-b-8 m-t-12 d-block">{{candidate.firstName}} {{candidate.lastName}}</mat-label>
+            <span class="f-s-16 m-b-12 email" (click)="sendEmail()"><i-tabler name="mail" class="icon-16" style="margin-right: 5px;"></i-tabler>{{candidate.email}}</span>
+          </div>
+          <div class="info-div">
+            <mat-label class="mat-subtitle-2 f-s-18 f-w-600 d-flex align-items-center m-b-24" ><i-tabler name="user-code" class="icon-16 d-flex "></i-tabler><span class="m-l-4">General Information</span></mat-label>
+            <div class="detail-item">
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 m-t-8 d-block">Session: </mat-label>
+              <span class="m-l-4">{{candidate.team?.session?.name}}</span>
+            </div>
+            <div class="detail-item">
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 m-t-8 d-block">Team: </mat-label>
+              <span class="m-l-4">{{candidate.team?.name}}</span>
+            </div>
+            <div class="detail-item">
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 m-t-8 d-block">Team Size: </mat-label>
+              <span class="m-l-4">{{candidate.team?.size}}</span>
+            </div>
+            <div class="detail-item">
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 m-t-8 d-block">Project: </mat-label>
+              <span class="m-l-4">{{candidate.team?.project?.title}}</span>
+            </div>
+            <div class="supervisors" >
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 m-t-8 d-block">Supervisor: </mat-label>
+              <div *ngFor="let supervisor of candidate.team?.project?.supervisor">
+                <div  class="d-flex m-b-24 supervisor">
+                  <img *ngIf="supervisor.picture && !supervisor.picture.endsWith('/images/'); else defaultPicture" [src]="supervisor.picture" class="collaborator-picture displayed-picture" alt="Evaluator Picture">
+              <ng-template #defaultPicture>
+                <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                  {{ supervisor.nom?.charAt(0) | uppercase }}
+                </div>
+              </ng-template>
+              <div class="supervisor-data" >
+                  <span class="shadow-none f-w-600 d-block" style="margin-left: 8px;">{{ supervisor.nom }} {{ supervisor.prenom }}</span>
+                  <span class="shadow-none f-w-400 d-flex align-items-center" style="margin-left: 8px;">
+                      <i-tabler name="mail-opened" class="icon-16"></i-tabler>
+                      <span class="m-l-4">{{ supervisor.email }}</span>
+                  </span>
+              </div>
+              </div>
+              </div> 
+            </div>
+     
+          </div>
+          <div class="skills-div">
+            <div class="skills-head">
+              <mat-label class="mat-subtitle-2 f-s-18 f-w-600 d-flex align-items-center m-b-24" ><i-tabler name="certificate-2" class="icon-16 d-flex"></i-tabler><span class="m-l-4">Skills</span></mat-label>
+              <div class="custom-tooltip">
+                <button mat-icon-button (click)="toggleSkillInput()">
+                  <mat-icon class="icon-btn"><i-tabler name="edit" class="icon-16 d-flex"></i-tabler></mat-icon>
+                </button>
+                <span class="tooltip-text">Add Skill</span>
+              </div>
+            </div>
+            <ul class="skills-list">
+              <li *ngFor="let skill of candidate.skills" class="skill-item" (mouseenter)="showDeleteButton(skill)" (mouseleave)="hideDeleteButton(skill)">
+                <span class="bg-light-primary text-primary rounded f-w-600 p-6 p-y-4 f-s-12 d-flex align-items-center" style="height: 30px;" >{{ skill }}
+                <button class="delete-button d-flex align-items-center" (click)="deleteSkill(skill)" *ngIf="isHovered(skill)" >
+                  <mat-icon color="warn" class="icon-btn"><i-tabler name="x" class="icon-14 d-flex" ></i-tabler></mat-icon>
+                </button></span>
+              </li>
+            </ul>          
+            <div *ngIf="showSkillInput" >
+              <input type="text" placeholder="Enter skill" [(ngModel)]="newSkill">
+              <div class="skill-actions">
+                <button mat-raised-button color="warn" (click)="cancelAddSkill()">Cancel</button>
+                <button  class="m-l-8" mat-raised-button color="primary" [disabled]="!newSkill.trim()" (click)="addSkill()">Add</button>
+            </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-lg-8">
+      <mat-card class="cardWithShadow">
+        <mat-card-content class="p-24">
+          <mat-card-title class="d-flex align-items-center" ><i-tabler name="chart-histogram" class="icon-18 d-flex"></i-tabler><span class="m-l-8">Progress Statistics</span></mat-card-title>
+          <div >
+            <div class="chart" >
+              <h4>Average Score per Campaign</h4>
+              <p-chart type="line" [data]="basicData" [options]="basicOptions"></p-chart>
+            </div>
+            <div class="chart">
+              <h4>Evaluation Criteria per Campaign</h4>
+              <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <mat-card class="cardWithShadow evaluations-card">
+    <mat-card-content class="p-24">
+      <mat-card-title class="d-flex align-items-center" ><i-tabler name="clipboard-list" class="icon-18 d-flex"></i-tabler><span class="m-l-8">Evaluations</span></mat-card-title>
+      <h3 class="f-w-400" *ngIf="evaluationData.length === 0">No evaluation available for this team!</h3>
+      <div   *ngIf="evaluationData.length != 0">
+        <div class="evaluation-container" *ngFor="let evaluationsArray of evaluationData">
+          <div *ngFor="let evaluation of evaluationsArray ; let i = index;">
+            <mat-accordion>
+              <mat-expansion-panel class="m-b-12" [expanded]="isFirstPanel(i)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="campaign-name d-flex align-items-center">
+                      <i-tabler name="calendar-code" class="icon-16" style="margin-right: 5px;"></i-tabler>
+                      <span class="f-s-14 f-w-600">{{ evaluation?.name}}</span>
+                    </div>
+                    <span class="f-w-600 text-error bg-light-error  f-s-12 rounded m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignFinished(evaluation?.endDate)">Finished</span>
+                    <span class="f-w-600 text-success bg-light-success  f-s-12 rounded   m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignInProgress(evaluation?.startDate, evaluation?.endDate)">In Progress</span>
+                    <span class="f-w-600  text-accent bg-light-accent f-s-12 rounded  m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignNotStartedYet(evaluation?.startDate)">Not Started Yet</span>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="table-container"  style="overflow-x: auto;">
+                  <table class="custom-table">
+                    <thead>
+                      <tr>
+                        <th>Evaluator</th>
+                        <th *ngFor="let criteria of evaluationCriteria">{{ criteria.name }}</th>
+                        <th>Final Score</th>
+                        <th>Remark</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let line of evaluation.evaluations[0].evaluationLines; let i = index">
+                        <tr>
+                          <td>
+                            <div class="custom-tooltip">
+                            <img *ngIf="line.evaluator.picture && !line.evaluator.picture.endsWith('/images/'); else defaultPicture" [src]="line.evaluator.picture" alt="Evaluator picture" class="evaluator-picture">
+                            <ng-template #defaultPicture>
+                              <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                {{ line.evaluator.nom?.charAt(0) | uppercase }}
+                              </div>
+                            </ng-template>
+                            <span class="tooltip-text-evaluator tooltip-text">{{line.evaluator.nom}} {{line.evaluator.prenom}}</span>
+                        </div>
+                      </td>
+                          <ng-container *ngFor="let criteria of evaluationCriteria">
+                            <td [ngStyle]="{'background-color': !line.evaluator.evaluationLineCriteriaGrades.hasOwnProperty(criteria.id) ? '#f2f6fa' : 'transparent'}">{{ criteria && criteria.id && line.evaluator.evaluationLineCriteriaGrades[criteria.id] }}</td>
+                          </ng-container>
+                          <td>{{ line.score }}</td>
+                          <td style="max-width: 60px;">
+                            <div class="custom-tooltip">
+                              <button mat-icon-button color="primary" (click)="toggleRowExpansion(i)">
+                                <mat-icon class="icon-btn">
+                                  <i-tabler name="{{ isRowExpanded(i) ? 'note-off' : 'note' }}" class="icon-20 d-flex"></i-tabler>
+                                </mat-icon>
+                              </button>
+                              <span class="tooltip-text">{{ isRowExpanded(i) ? 'Hide Remark' : 'View Remark' }}</span>                              
+                            </div>
+                          </td>
+                        </tr>
+                        <tr *ngIf="expandedRowIndices.includes(i)">
+                          <td [attr.colspan]="columnsToDisplayWithExpand.length">
+                            <div class="expanded-row">
+                              <img src="/assets/images/logos/remarques.png" class="note-icon"/>
+                              {{ line.remark ? line.remark : 'No remark available' }}
+                            </div>
+                          </td>
+                        </tr>                                              
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>    
+    </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div *ngIf="showPrint">
+  <div  id="first-printed-container" style="padding-right:30px; padding-left:40px;">
+    <div class="candidate-print-card" style="margin-bottom: 30px;">
+      <div class="candidate-print-name">{{candidate.firstName}} {{candidate.lastName}}</div>
+      <div class="candidate-print-info">
+          <p><strong>Email:</strong> {{candidate.email}}</p>
+          <p><strong>Session:</strong> {{candidate.team?.session?.name}}</p>
+          <p><strong>Team:</strong> {{candidate.team?.name}}</p>
+          <p><strong>Team Size:</strong> {{candidate.team?.size}}</p>
+          <p><strong>Project:</strong> {{candidate.team?.project?.title}}</p>
+          <p><strong>Skills:</strong>  <span *ngFor="let skill of candidate.skills; let last = last">{{skill}}{{ !last ? ', ' : '' }}</span></p>
+      </div>
+  </div>
+    <div >
+      <div class="chart chart-print" style="margin-bottom: 30px;">
+        <h4>Average Score per Campaign</h4>
+        <p-chart type="line" [data]="basicData" [options]="basicOptions"></p-chart>
+      </div>
+      <div class="chart chart-print" >
+        <h4>Evaluation Criteria per Campaign</h4>
+        <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
+      </div>
+    </div>
+  </div>
+  <div  id="second-printed-container" *ngIf="evaluationData.length != 0" style="padding-right:30px; padding-left:40px;">
+    <div class="evaluation-container" *ngFor="let evaluationsArray of evaluationData">
+      <div *ngFor="let evaluation of evaluationsArray ; let i = index;" class="padding-top: 30px;">
+          <div >
+            <div style="margin-top:40px ;color: white" ></div>
+            <span class="f-s-14 f-w-600 print-campaign-name" >{{ evaluation?.name}}</span>
+            
+              <table style="margin-top: 15px;">
+                <thead>
+                  <tr>
+                    <th>Evaluator</th>
+                    <th *ngFor="let criteria of evaluationCriteria">{{ criteria.name }}</th>
+                    <th>Final Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let line of evaluation.evaluations[0].evaluationLines; let i = index">
+                    <tr>
+                      <td>
+                       <span>{{line.evaluator.nom}} {{line.evaluator.prenom}}</span>
+                  </td>
+                      <ng-container *ngFor="let criteria of evaluationCriteria">
+                        <td [ngStyle]="{'background-color': !line.evaluator.evaluationLineCriteriaGrades.hasOwnProperty(criteria.id) ? '#f2f6fa' : 'transparent'}">{{ criteria && criteria.id && line.evaluator.evaluationLineCriteriaGrades[criteria.id] }}</td>
+                      </ng-container>
+                      <td>{{ line.score }}</td>
+                    </tr>
+                    <tr >
+                      <td [attr.colspan]="columnsToDisplayWithExpand.length - 1">
+                        <div class="expanded-row">
+                          <img src="/assets/images/logos/remarques.png" class="note-icon"/>
+                          {{ line.remark ? line.remark : 'No remark available' }}
+                        </div>
+                      </td>
+                    </tr>                                              
+                  </ng-container>
+                </tbody>
+              </table>
+          </div>
+      </div>
+    </div>    
+  </div>
+</div>
+
+

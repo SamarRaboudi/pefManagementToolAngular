@@ -1,0 +1,31 @@
+<!-- edit-criteria.component.html -->
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="square-plus" class="icon-24" style="margin-right: 10px;"></i-tabler> Add Criteria</h2>
+<mat-dialog-content>
+  <form [formGroup]="criteriaForm" class="add-form m-t-8">
+    <div class="form-content">
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Name</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': criteriaForm.get('name')?.invalid && (criteriaForm.get('name')?.dirty || criteriaForm.get('name')?.touched), 'touched': criteriaForm.get('name')?.touched && criteriaForm.get('name')?.valid }">
+        <input placeholder="Name" formControlName="name" class="w-100 custom-input" width="100%">
+        <div *ngIf="criteriaForm.get('name')?.invalid && (criteriaForm.get('name')?.dirty || criteriaForm.get('name')?.touched)" class="error-message">{{ getnameErrorMessage(criteriaForm.get('name')) }}</div>
+      </div>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Value</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': criteriaForm.get('value')?.invalid && (criteriaForm.get('value')?.dirty || criteriaForm.get('value')?.touched), 'touched': criteriaForm.get('value')?.touched && criteriaForm.get('value')?.valid }">
+        <input placeholder="Value" formControlName="value" class="w-100 custom-input" width="100%" type="number">
+        <div *ngIf="criteriaForm.get('value')?.invalid && (criteriaForm.get('value')?.dirty || criteriaForm.get('value')?.touched)" class="error-message">{{ getvalueErrorMessage(criteriaForm.get('value')) }}</div>
+      </div>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Profil</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Profils</mat-label>
+        <mat-select formControlName="profils" multiple> <!-- Enable multiple selection -->
+          <mat-option *ngFor="let profil of profils" [value]="profil?.id">{{ profil?.titre }}</mat-option>
+
+        </mat-select>
+      </mat-form-field>
+      
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="criteriaForm.invalid" (click)="addCriteria()">Add</button>
+</mat-dialog-actions>

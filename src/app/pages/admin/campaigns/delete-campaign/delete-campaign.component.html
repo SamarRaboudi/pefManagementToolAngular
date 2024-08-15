@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Delete Campaign</h2>
+<mat-dialog-content>
+  <p class="dialog-content">Would you like to delete the Campaign <span>{{ campaign.name }}</span>?</p>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="warn" (click)="deleteCampaign()">Delete</button>
+</mat-dialog-actions>

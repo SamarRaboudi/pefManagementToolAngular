@@ -1,0 +1,79 @@
+
+<div *ngIf="loading" class="loader">
+    <!-- Add your loading indicator here -->
+    <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div *ngIf="!loading">
+    <mat-card class="cardWithShadow evaluation-container">
+        <div class="header">
+            <div class="campaign-info">
+                <div class="campaign-name d-flex align-items-center">
+                    <i-tabler name="users-group" class="icon-18" style="margin-right: 5px;"></i-tabler>
+                    <span class="f-s-16 f-w-600">{{teamData.teamName}}</span>
+                </div> 
+                <span class="f-s-12" style="margin-left: 24px;">{{teamData.sessionName}}</span>      
+            </div>
+            <div class="header-actions">
+                <button mat-raised-button color="accent" class="delete-btn"  (click)="saveEvaluation()"><span>
+                    <span class="d-flex align-items-center"><i-tabler name="device-floppy" class="icon-18" ></i-tabler><span class="m-l-4">Save</span></span></span>
+             </button>
+                <button mat-raised-button color="primary" class="delete-btn m-l-4"  (click)="validateEvaluation()"><span>
+                    <span class="d-flex align-items-center"><i-tabler name="check" class="icon-18" ></i-tabler><span class="m-l-4">Validate</span></span></span>
+             </button>
+            </div>
+        </div>
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let candidate of candidatesData; let i = index; first as isFirst" [expanded]="isFirst">
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="f-w-600">
+                        <div class="team-member m-l-4">
+                            <img [src]="candidate.picture" alt="Candidate 1 Image" class="candidate-image">
+                        </div>
+                        <div>
+                            <span class="d-block">{{candidate.firstName}} {{candidate.lastName}}</span>  
+                            <span class="shadow-none f-w-400 d-flex align-items-center f-s-12" ><i-tabler name="mail-opened" class="icon-12" style="margin-bottom: 6px;"></i-tabler><span class="m-l-4">{{ candidate.email }}</span></span> 
+                        </div>              
+                    </mat-panel-title>
+                    <!-- Removed the mat-panel-description section -->
+                </mat-expansion-panel-header>
+              <div class="table-container">
+                <table mat-table [dataSource]="candidateEvaluationData[i]" class="custom-table">
+                    
+                    <!-- Evaluation criteria input fields -->
+                    <ng-container *ngFor="let criteria of evaluationCriteria" matColumnDef="{{ criteria.name }}">
+                        <th mat-header-cell *matHeaderCellDef>{{ criteria.name }}</th>
+                        <td mat-cell *matCellDef="let element">
+                            <input type="number" *ngIf="criteria.id !== undefined && criteria.name" 
+                            [(ngModel)]="candidateEvaluationData[i][0].criteria[criteria.id]" 
+                            (ngModelChange)="updateCriterionValue(element, criteria.id!, $event)" 
+                            min="0" max="5"
+                            [value]="candidateEvaluationData[i][0].criteria[criteria.id]">                  
+                        </td>                    
+                    </ng-container>
+                  
+                    <!-- Final note column -->
+                    <ng-container matColumnDef="finalNote" >
+                        <th mat-header-cell *matHeaderCellDef>Final Note</th>
+                        <td mat-cell *matCellDef="let element">{{ element.score }}</td>
+                    </ng-container>
+                  
+                    <!-- Header row -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  
+                    <!-- Data rows -->
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <div class="remarq-icons">
+                <img src="/assets/images/logos/remarques.png" class="note-icon"/>
+                <!-- Bind textarea to candidate's remark property -->
+                <textarea matInput placeholder="Add a remark" class="w-100 custom-input" width="100%" cdkTextareaAutosize cdkAutosizeMaxRows="10" style="min-height: 100px;"
+                          [(ngModel)]="candidateEvaluationData[i][0].remark" [value]="candidateEvaluationData[i][0].remark"></textarea>
+            </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+    </mat-card>
+</div>
+
+
+

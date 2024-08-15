@@ -1,0 +1,55 @@
+<!-- edit-team.component.html -->
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="edit" class="icon-24" style="margin-right: 10px;"></i-tabler> Edit Team</h2>
+<mat-dialog-content>
+  <form [formGroup]="teamForm" class="add-form m-t-8">
+    <div class="form-content">
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Name</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': teamForm.get('name')?.invalid && (teamForm.get('name')?.dirty || teamForm.get('name')?.touched), 'touched': teamForm.get('name')?.touched && teamForm.get('name')?.valid }">
+        <input placeholder="Name" formControlName="name" class="w-100 custom-input" width="100%">
+        <div *ngIf="teamForm.get('name')?.invalid && (teamForm.get('name')?.dirty || teamForm.get('name')?.touched)" class="error-message">{{ getnameErrorMessage(teamForm.get('name')) }}</div>
+      </div>
+
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Session</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Sessions</mat-label>
+        <mat-select formControlName="session">
+          <mat-option *ngFor="let session of sessions" [value]="session.id">{{ session.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="teamForm.get('session')?.invalid && teamForm.get('session')?.touched">Session is required.</mat-error>
+      </mat-form-field>
+
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Project</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Projects</mat-label>
+        <mat-select formControlName="project">
+          <mat-option *ngFor="let project of projects" [value]="project?.id">{{ project?.title }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="teamForm.get('project')?.invalid && teamForm.get('project')?.touched">Project is required.</mat-error>
+      </mat-form-field>
+
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Candidates</mat-label>
+      <mat-form-field appearance="outline" [style.width]="'100%'">
+        <mat-label>Candidates</mat-label>
+        <mat-select formControlName="candidates" multiple> 
+          <mat-option *ngFor="let candidate of candidates" [value]="candidate.id" class="d-flex align-items-center">
+            <div class="supervisor-info">
+              <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture" [src]="candidate.picture" class="collaborator-picture" alt="Collaborator Picture">
+              <ng-template #defaultPicture>
+                <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                  {{ candidate.firstName?.charAt(0) | uppercase }}
+                </div>
+              </ng-template>
+              <span style="margin-left: 5px;">{{ candidate.firstName }} {{ candidate.lastName }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="teamForm.get('candidates')?.invalid && teamForm.get('candidates')?.touched">At least one candidate is required.</mat-error>
+      </mat-form-field>
+      
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="teamForm.invalid" (click)="editTeam()">Edit</button>
+</mat-dialog-actions>

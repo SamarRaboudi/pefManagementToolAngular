@@ -1,0 +1,40 @@
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="square-plus" class="icon-24" style="margin-right: 10px;"></i-tabler> Add Candidate</h2>
+<mat-dialog-content>
+  <form [formGroup]="candidateForm" class="add-form m-t-8">
+    <div class="form-picture" >
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block" >Picture</mat-label>
+      <div class="wrapper">
+      <div class="image">
+      <img [src]="photoLink" style="display: none" onload="this.style.display=''">
+        </div>
+        <button mat-icon-button id="custom-btn" (click)="file.click()">
+          <mat-icon class="icon-btn"><i-tabler name="upload" class="icon-18 d-flex"></i-tabler></mat-icon>
+        </button>
+    </div>
+      <input id="default-btn" type="file" hidden accept="image/*" #file (change)="onFileChanged($event)">
+    </div>
+    <div class="form-content">
+        <div class="name">
+        <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">FirstName</mat-label>
+        <div class="w-100" [ngClass]="{ 'invalid': candidateForm.get('firstName')?.invalid && (candidateForm.get('firstName')?.dirty || candidateForm.get('firstName')?.touched), 'touched': candidateForm.get('firstName')?.touched && candidateForm.get('firstName')?.valid }">
+            <input placeholder="FirstName" formControlName="firstName" class="w-100 custom-input" width="100%">
+            <div *ngIf="candidateForm.get('firstName')?.invalid && (candidateForm.get('firstName')?.dirty || candidateForm.get('firstName')?.touched)" class="error-message">{{ getFirstNameErrorMessage(candidateForm.get('firstName')) }}</div>
+        </div>
+        <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">LastName</mat-label>
+        <div class="w-100" [ngClass]="{ 'invalid': candidateForm.get('lastName')?.invalid && (candidateForm.get('lastName')?.dirty || candidateForm.get('lastName')?.touched), 'touched': candidateForm.get('lastName')?.touched && candidateForm.get('lastName')?.valid }">
+            <input placeholder="lastName" formControlName="lastName" class="w-100 custom-input" width="100%">
+            <div *ngIf="candidateForm.get('lastName')?.invalid && (candidateForm.get('lastName')?.dirty || candidateForm.get('lastName')?.touched)" class="error-message">{{ getLastNameErrorMessage(candidateForm.get('lastName')) }}</div>
+        </div>
+        </div>
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 m-t-12 d-block">Email</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': candidateForm.get('email')?.invalid && (candidateForm.get('email')?.dirty || candidateForm.get('email')?.touched), 'touched': candidateForm.get('email')?.touched && candidateForm.get('email')?.valid }">
+        <input placeholder="email" formControlName="email" class="w-100 custom-input" width="100%">
+        <div *ngIf="candidateForm.get('email')?.invalid && (candidateForm.get('email')?.dirty || candidateForm.get('email')?.touched)" class="error-message">{{ getEmailErrorMessage(candidateForm.get('email')) }}</div>
+      </div>
+    </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="candidateForm.invalid" (click)="addCandidate()">Add</button>
+</mat-dialog-actions>

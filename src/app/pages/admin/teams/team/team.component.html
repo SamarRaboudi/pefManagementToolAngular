@@ -1,0 +1,116 @@
+<div *ngIf="loading" class="loader">
+  <!-- Add your loading indicator here -->
+  <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div *ngIf="!loading">
+  <div style="display: flex; align-items: center; justify-content: space-between ; margin-bottom: 20px;">
+    <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Search</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input type="search" matInput (input)="applyFilter($event)">      
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="m-l-12">
+          <mat-label>Filter by Session</mat-label>
+          <mat-select (selectionChange)="filterBySession($event.value)">
+            <mat-option *ngFor="let session of sessions" [value]="session.id">{{ session.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <button *ngIf="isUserAdmin" mat-raised-button color="primary" class="add-btn"(click)="openAddDialog()"><span>+</span> Add Team</button>
+  </div>
+  <div>
+    <table mat-table [dataSource]="dataSource" class="demo-table">
+        <!-- Position Column -->
+        <!-- <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef  class="column-title" >No.</th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">{{element.id}}</td>
+        </ng-container> -->
+  
+   
+        <!-- Weight Column -->
+        <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef  class="column-title">Name</th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">{{element.name}}</td>
+        </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="session">
+            <th mat-header-cell *matHeaderCellDef  class="column-title">Session</th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">
+          <span  class="f-w-600 align-items-center {{ 'text-' + getTextColor(element.session.id) }} {{ 'bg-light-' + getTextColor(element.session.id) }} f-s-12 rounded p-4 p-y-4" >{{element.session.name}}</span>
+        </td>
+          </ng-container>
+            
+                <!-- Weight Column -->
+                <ng-container matColumnDef="project">
+                  <th mat-header-cell *matHeaderCellDef class="column-title">Project</th>
+                  <td mat-cell *matCellDef="let element" style="text-align: center;">
+                    <ng-container *ngFor="let project of element.projects; let last = last">
+                     {{ project.title }}
+                     <span *ngIf="!last">, </span>
+                    </ng-container>
+                  </td>
+                </ng-container>
+
+
+                      <!-- Weight Column -->
+            <ng-container matColumnDef="candidate">
+              <th mat-header-cell *matHeaderCellDef class="column-title">Candidates</th>
+              <td mat-cell *matCellDef="let element" class="candidate-cell">
+                <div class="d-flex" style="justify-content: center;">
+                  <ng-container *ngFor="let candidate of element.candidates">
+                  <div class="candidate-container">
+                    <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture" [src]="candidate.picture" class="candidate-picture" alt="candidate Picture">
+                    <ng-template #defaultPicture>
+                      <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                        {{ candidate.firstName?.charAt(0) | uppercase }}
+                      </div> 
+                    </ng-template>
+                    <span class="tooltip">{{ candidate.firstName }} {{ candidate.lastName }}</span>
+                  </div>
+                </ng-container>
+                </div>
+      
+              </td>
+            </ng-container>
+
+              
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef  class="column-title">Action</th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">
+          <div class="custom-tooltip">
+            <button mat-icon-button color="primary"   (click)="ViewTeamEvaluationDetails(element.id)"   >
+                <mat-icon class="icon-btn"><i-tabler name="clipboard-data" class="icon-20 d-flex"></i-tabler></mat-icon>
+            </button>
+            <span class="tooltip-text">View Evaluation</span>
+         </div>
+          <div class="custom-tooltip" *ngIf="isUserAdmin">
+            <button mat-icon-button color="accent"   (click)="openEditDialog(element)"   >
+                <mat-icon class="icon-btn"><i-tabler name="edit" class="icon-18 d-flex"></i-tabler></mat-icon>
+            </button>
+            <span class="tooltip-text">Edit</span>
+        </div>
+        <div class="custom-tooltip" *ngIf="isUserAdmin">
+              <button mat-icon-button color="warn"   (click)="openDeleteDialog(element)"    >
+                <mat-icon class="icon-btn"><i-tabler name="square-x" class="icon-18 d-flex"></i-tabler></mat-icon>
+              </button>
+          <span class="tooltip-text">Remove</span>
+        </div>
+        </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-row
+            (click)="clickedRows.add(row)"
+            [class.demo-row-is-clicked]="clickedRows.has(row)"
+            *matRowDef="let row; columns: displayedColumns;"
+        ></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements" style="margin-top: 20px;">
+  </mat-paginator>
+  </div>
+  <p-toast />
+</div>

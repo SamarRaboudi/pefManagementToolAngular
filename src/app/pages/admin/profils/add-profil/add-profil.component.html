@@ -1,0 +1,16 @@
+<h2 mat-dialog-title class="d-flex align-items-center m-t-8"><i-tabler name="square-plus" class="icon-24" style="margin-right: 10px;"></i-tabler> Add Profile</h2>
+<mat-dialog-content>
+  <form [formGroup]="profilForm" class="add-form m-t-8">
+    <div class="form-content">
+      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Title</mat-label>
+      <div class="w-100" [ngClass]="{ 'invalid': profilForm.get('titre')?.invalid && (profilForm.get('titre')?.dirty || profilForm.get('titre')?.touched), 'touched': profilForm.get('titre')?.touched && profilForm.get('titre')?.valid }">
+        <input placeholder="Profil's title" formControlName="titre" class="w-100 custom-input" width="100%">
+        <div *ngIf="profilForm.get('titre')?.invalid && (profilForm.get('titre')?.dirty || profilForm.get('titre')?.touched)" class="error-message">{{ getTitreErrorMessage(profilForm.get('titre')) }}</div>
+      </div>
+    </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-flat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="profilForm.invalid" (click)="addProfil()">Add</button>
+</mat-dialog-actions>

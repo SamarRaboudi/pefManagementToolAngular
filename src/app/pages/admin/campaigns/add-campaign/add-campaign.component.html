@@ -1,0 +1,175 @@
+<div style="position: relative;">
+    <h1 mat-dialog-title class="d-flex align-items-center m-t-24 mr-4 mb-0"><i-tabler name="square-plus" class="icon-24" style="margin-right: 10px;"></i-tabler> Create Campaign</h1>
+    <div style="position: absolute; top: 0; right: 27px">
+        <div class="custom-tooltip">
+            <button mat-icon-button (click)="isLinear = !isLinear" id="toggle-linear" style="height: auto;">
+                <mat-icon class="icon-btn">
+                    <i-tabler [name]="isLinear ? 'pencil' : 'pencil-off'" class="icon-16"></i-tabler>
+                </mat-icon>
+            </button>
+            <span class="tooltip-text">{{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}</span>
+        </div>
+    </div>
+</div>
+<mat-dialog-content >
+  <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="firstFormGroup" [editable]="isLinear">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Select session</ng-template>
+        <div class="form-div">
+            <mat-form-field appearance="outline" [style.width]="'100%'">
+                <mat-label>Session</mat-label>
+                <mat-select formControlName="sessionName"> 
+                <mat-option *ngFor="let session of sessions" [value]="session?.name">{{ session?.name }}</mat-option>
+                </mat-select>
+                <mat-error class="m-t-8" *ngIf="firstFormGroup.get('sessionName')?.invalid && firstFormGroup.get('sessionName')?.touched">One session is required.</mat-error>
+            </mat-form-field>
+        </div>
+        <div style="text-align: end;">
+          <button class="m-t-8 btn-next" mat-button color="primary" matStepperNext [disabled]="firstFormGroup.invalid" ><span>Next</span><i-tabler name="arrow-narrow-right" class="icon-16 arrow-right" style="margin: auto 0;"></i-tabler></button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" [editable]="isLinear">
+        <ng-template matStepLabel>Select evaluators</ng-template>
+        <div class="evaluators-container form-div">
+          <mat-checkbox (change)="selectAllEvaluators($event.checked)">Select All</mat-checkbox>
+
+            <div *ngFor="let evaluator of evaluators">
+              <mat-checkbox [checked]="evaluator.selected" (change)="updateEvaluatorSelection($event.checked, evaluator)">
+
+                  <div class="evaluator-info">
+                    <img *ngIf="evaluator.picture && !evaluator.picture.endsWith('/images/'); else defaultPicture" [src]="evaluator.picture" class="collaborator-picture" alt="Collaborator Picture">
+                    <ng-template #defaultPicture>
+                      <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                        {{ evaluator.nom?.charAt(0) | uppercase }}
+                      </div>
+                    </ng-template>
+                    <span style="margin-left: 5px;">{{ evaluator.nom }} {{ evaluator.prenom }}</span>
+                  </div>
+                </mat-checkbox>
+              </div>  
+        </div>
+        <mat-error class="m-t-8" *ngIf="secondFormGroup.get('selectedEvaluators')?.invalid && secondFormGroup.get('selectedEvaluators')?.touched">
+          At least one evaluator is required.
+        </mat-error>
+        <div class="m-t-24"  style="text-align: end;">
+          <button mat-button class="btn-back" color="primary" matStepperPrevious [disabled]="!isLinear"><i-tabler name="arrow-narrow-left" class="icon-16 arrow-left" style="margin: auto 0;"></i-tabler><span>Back</span></button>
+          <button class="btn-next" mat-button color="primary" matStepperNext [disabled]="selectedEvaluators.length === 0" ><span>Next</span><i-tabler name="arrow-narrow-right" class="icon-16 arrow-right" style="margin: auto 0;"></i-tabler></button>
+        </div>
+      </mat-step>     
+    <mat-step [stepControl]="thirdFormGroup" [editable]="isLinear">
+        <form [formGroup]="thirdFormGroup">
+          <ng-template matStepLabel>Choose date</ng-template>  
+          <div class="form-div">       
+          <mat-form-field appearance="outline" [style.width]="'100%'">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [rangePicker]="rangePicker">
+              <input matStartDate placeholder="Start date" formControlName="startDate">
+              <input matEndDate placeholder="End date" formControlName="endDate">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #rangePicker>
+              <mat-date-range-picker-actions>
+                <button mat-button matDateRangePickerCancel>Cancel</button>
+                <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+              </mat-date-range-picker-actions>
+            </mat-date-range-picker>
+          </mat-form-field>
+          </div>
+          <div class="m-t-24"  style="text-align: end;">
+            <button mat-button class="btn-back" color="primary" matStepperPrevious [disabled]="!isLinear"><i-tabler name="arrow-narrow-left" class="icon-16 arrow-left" style="margin: auto 0;"></i-tabler><span>Back</span></button>
+            <button class="btn-next" mat-button color="primary" matStepperNext [disabled]="thirdFormGroup.invalid" (click)="getTableDates()" ><span>Next</span><i-tabler name="arrow-narrow-right" class="icon-16 arrow-right" style="margin: auto 0;"></i-tabler></button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Availability Table</ng-template>
+      
+        <table class="availability-table">
+          <!-- Header Row -->
+          <tr>
+              <th>Evaluator</th>
+              <th *ngFor="let day of days">{{ day | date }}</th>
+          </tr>
+          <!-- Data Rows -->
+          <tr *ngFor="let evaluator of selectedEvaluators">
+              <td>
+                  <div class="custom-tooltip">
+                      <img *ngIf="evaluator.picture && !evaluator.picture.endsWith('/images/'); else defaultPicture" [src]="evaluator.picture" alt="evaluator picture" class="table-evaluator-picture">
+                      <ng-template #defaultPicture>
+                          <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                              {{ evaluator.nom?.charAt(0) | uppercase }}
+                          </div>
+                      </ng-template>
+                      <span class="tooltip-text-evaluator tooltip-text">{{evaluator.nom}} {{evaluator.prenom}}</span>
+                  </div>
+              </td>
+              <ng-container *ngFor="let day of days">
+                  <td (click)="openAvailabilityDialog(evaluator, day)" class="open-time-dialog-btn">
+                      <ng-container *ngIf="getAvailabilityForDay(evaluator, day) as availability">
+                          <ng-container *ngFor="let timeRange of availability.timeRanges">
+                              {{ timeRange.startTime }} - {{ timeRange.endTime }}
+                              <br>
+                          </ng-container>
+                      </ng-container>
+                      <ng-container *ngIf="!getAvailabilityForDay(evaluator, day)">
+                          No Availability
+                      </ng-container>
+                  </td>
+              </ng-container>
+          </tr>
+      </table>
+      
+        <!-- Navigation Buttons -->
+        <div class="m-t-24" style="text-align: end;">
+          <button mat-button class="btn-back" color="primary" matStepperPrevious [disabled]="!isLinear">
+            <i-tabler name="arrow-narrow-left" class="icon-16 arrow-left" style="margin: auto 0;"></i-tabler>
+            <span>Back</span>
+          </button>
+          <button class="btn-next" mat-button color="primary" matStepperNext>
+            <span>Next</span>
+            <i-tabler name="arrow-narrow-right" class="icon-16 arrow-right" style="margin: auto 0;"></i-tabler>
+          </button>
+        </div>
+      </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <div class="row">
+        <h4 class="col-lg-5 d-flex align-items-center" ><i-tabler name="timeline-event" class="icon-16"></i-tabler><span class="m-l-4" >Session:</span></h4>
+        <p class="col-lg-7"><span class="bg-light-accent text-accent rounded f-w-600 p-6 p-y-4 f-s-12">{{ firstFormGroup.value.sessionName }}</span></p>
+      </div>
+      <div class="row">
+        <h4 class="col-lg-5 d-flex" ><i-tabler name="users" class="icon-16"></i-tabler><span class="m-l-4">Evaluators:</span></h4>
+        <ul class="col-lg-7">
+          <li *ngFor="let evaluator of selectedEvaluators" class="d-flex align-items-center m-b-24" >
+            <img *ngIf="evaluator.picture && !evaluator.picture.endsWith('/images/'); else defaultPicture" [src]="evaluator.picture" class="collaborator-picture" alt="Collaborator Picture">
+            <ng-template #defaultPicture>
+              <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                {{ evaluator.nom?.charAt(0) | uppercase }}
+              </div>
+            </ng-template>
+            <span class="shadow-none f-w-600" style="margin-left: 5px;">{{ evaluator.nom }} {{ evaluator.prenom }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="row">
+        <h4 class="col-lg-5 d-flex align-items-center" ><i-tabler name="calendar-event" class="icon-16"></i-tabler><span class="m-l-4">Start Date:</span></h4>
+        <p class="col-lg-7"><span class="text-accent shadow-none f-w-600 p-6">{{ thirdFormGroup.value.startDate | date }}</span></p>
+      </div>
+      <div class="row">
+        <h4 class="col-lg-5 d-flex align-items-center" ><i-tabler name="calendar-event" class="icon-16"></i-tabler><span class="m-l-4">End Date:</span></h4>
+        <p class="col-lg-7"><span class="text-accent shadow-none f-w-600 p-6">{{ thirdFormGroup.value.endDate | date }}</span></p>
+      </div>
+      <div  style="text-align: end;">
+        <button mat-button class="btn-back" color="primary" matStepperPrevious [disabled]="!isLinear"><i-tabler name="arrow-narrow-left" class="icon-16 arrow-left" style="margin: auto 0;"></i-tabler><span>Back</span></button>
+        <button class="btn-next" mat-button color="primary" (click)="stepper.reset()"><span>Reset</span><i-tabler name="arrow-bounce" class="icon-16 arrow-right" style="margin: auto 0;"></i-tabler></button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-flat-button (click)="closeDialog()">Cancel</button>
+    <button mat-flat-button  [disabled]="selectedEvaluators.length === 0 || firstFormGroup.invalid || thirdFormGroup.invalid" color="primary" (click)="createCampaign()">Create</button>
+  </mat-dialog-actions>

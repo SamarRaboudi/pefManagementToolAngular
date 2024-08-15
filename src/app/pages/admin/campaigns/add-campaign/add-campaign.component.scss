@@ -1,0 +1,126 @@
+@import '../../../../../assets/scss/_variables.scss';
+.mat-stepper-horizontal {
+    margin-top: 8px;
+  }
+  
+  .mat-mdc-form-field {
+    margin-top: 16px;
+  }
+.form-div{
+    margin-top: 10px;
+}
+  .evaluators-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 300px; 
+    overflow-y: auto;
+  }
+  
+  .evaluators-container mat-checkbox {
+    flex-basis: calc(33.33% - 16px); 
+    margin: 8px;
+  }
+  
+  .collaborator-picture {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  
+  .circled-span {
+    border-radius: 50%;
+    width: 20px;
+    padding: 2px 3px;
+    text-align: center;
+  }
+  
+  .evaluator-info {
+    display: flex;
+    align-items: center; 
+  }
+  .dialog-actions{
+    display: flex;
+    justify-content: flex-end;
+}
+.icon-btn{
+    font-size: 16px;
+  }
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    font-size: 10px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    padding: 1px 3px;
+    position: absolute;
+    z-index: 1;
+    top: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  
+
+.custom-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+.btn-next{
+    position: relative;
+}
+.arrow-right{
+    position: absolute;
+    right: -55%;
+    top: 15%;
+}
+.btn-back{
+    position: relative;
+}
+.arrow-left{
+    position: absolute;
+    left: -55%;
+    top: 15%;
+}
+.campaign-info{
+  display: flex;
+  align-items: center;
+  justify-content: baseline;
+}
+.availability-table{
+  width: 100%;
+}
+.table-evaluator-picture{
+  width:20px;
+  height:20px ;
+  border-radius: 50%;
+}
+th, td {
+  border: 1px solid $borderColor; 
+  padding: 10px 8px;
+  text-align: center;
+  line-height: 1.5;
+  max-width: 100px;
+}
+
+th{
+    font-weight: 600;
+    color: $primary;
+    font-size: 12px;
+}
+td{
+  font-size: 13px;
+}
+tr{
+  text-align: center;
+}
+.open-time-dialog-btn{
+  cursor: pointer;
+}

@@ -1,0 +1,355 @@
+<div *ngIf="loading" class="loader">
+  <!-- Add your loading indicator here -->
+  <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div *ngIf="!loading">
+  <mat-card class="cardWithShadow profile-container">
+    <!-- Profile info and picture -->
+    <div class="profile-cover">
+      <img src="\..\..\.\assets\images\backgrounds\talan_tunisie_cover.jpg" alt="Cover Image">
+    </div>
+    <div class="profile-info-container">
+      <div class="profile-picture-container">
+        <img [src]="photoLink.endsWith('/images/') ? defaultProfilePicture : photoLink" alt="Profile Picture" onload="this.style.display=''">
+        <button id="custom-btn" (click)="file.click()">
+          <mat-icon class="icon-btn"><i-tabler name="camera" class="icon-18"></i-tabler></mat-icon>
+        </button>
+        <input id="default-btn" type="file" hidden accept="image/*" #file (change)="onFileChanged($event)">
+      </div>
+      <h2>{{ userDetails.userFirstName }} {{ userDetails.userLastName }}</h2>
+      <p class="f-s-14 m-b-12 email">
+        <i-tabler name="mail" class="icon-16" style="margin-right: 5px;"></i-tabler><span>{{ userDetails.userEmail }}</span>
+      </p>
+      <p class="f-s-16 m-b-12">
+        <span class="f-w-600 align-items-center" *ngFor="let profile of userDetails.userProfils; let last = last"
+          [ngClass]="'text-' + getProfileColor(profile) + ' bg-light-' + getProfileColor(profile) + ' f-s-12 rounded p-4 p-y-4'"
+          [style.margin-right.px]="last ? 0 : 8">
+          {{ profile }}
+        </span>
+      </p>
+    </div>
+  
+    <!-- Project content -->
+    <div class="profil-content">
+      <mat-tab-group class="navigation-bar">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <i-tabler name="user-edit" class="icon-16"></i-tabler> <span class="navigation-label">Edit Profile</span>
+          </ng-template>
+          <div class="edit-form">
+            <form class="m-t-30" [formGroup]="userForm">
+              <h3 class="m-b-24">Edit Details</h3>
+              <div class="row" style="margin: 0 2px;">
+                <div class="col-lg-6">
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">FirstName</mat-label>
+                  <div class="w-100" [ngClass]="{ 'invalid': userForm.get('firstName')?.invalid && (userForm.get('firstName')?.dirty || userForm.get('firstName')?.touched), 'touched': userForm.get('firstName')?.touched && userForm.get('firstName')?.valid }">
+                    <input placeholder="FirstName" formControlName="firstName" class="w-100 custom-input">
+                    <div *ngIf="userForm.get('firstName')?.invalid && (userForm.get('firstName')?.dirty || userForm.get('firstName')?.touched)" class="error-message">{{ getFirstNameErrorMessage() }}</div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">LastName</mat-label>
+                  <div class="w-100" [ngClass]="{ 'invalid': userForm.get('lastName')?.invalid && (userForm.get('lastName')?.dirty || userForm.get('lastName')?.touched), 'touched': userForm.get('lastName')?.touched && userForm.get('lastName')?.valid }">
+                    <input placeholder="LastName" formControlName="lastName" class="w-100 custom-input">
+                    <div *ngIf="userForm.get('lastName')?.invalid && (userForm.get('lastName')?.dirty || userForm.get('lastName')?.touched)" class="error-message">{{ getLastNameErrorMessage() }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="edit-form-action">
+                <a mat-flat-button color="primary" class="m-t-12 edit-form-action" [disabled]="!userForm.valid" (click)="editUser()">Save</a>
+              </div>
+            </form>
+            <form class="m-t-30" [formGroup]="resetPasswordForm">
+              <h3 class="m-b-24">Reset Password</h3>
+              <div class="row" style="margin: 0 2px;">
+                <div class="col-lg-6">
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Current Password</mat-label>
+                  <div class="w-100" [ngClass]="{ 'invalid': resetPasswordForm.get('currentPassword')?.invalid && (resetPasswordForm.get('currentPassword')?.dirty || resetPasswordForm.get('currentPassword')?.touched), 'touched': resetPasswordForm.get('currentPassword')?.touched && resetPasswordForm.get('currentPassword')?.valid }">
+                    <div class="password-input-container">
+                      <input matInput [type]="hideP ? 'password' : 'text'" formControlName="currentPassword" class="w-100 custom-input" />
+                      <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" [attr.aria-label]="hideP ? 'Hide password' : 'Show password'">
+                        <mat-icon>{{ hideP ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div *ngIf="currentPassword.invalid && (currentPassword.dirty || currentPassword.touched)" class="error-message">{{ getCurrentPasswordErrorMessage() }}</div>
+                </div>
+                <div class="col-lg-6">
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">New Password</mat-label>
+                  <div class="w-100" [ngClass]="{ 'invalid': resetPasswordForm.get('newPassword')?.invalid && (resetPasswordForm.get('newPassword')?.dirty || resetPasswordForm.get('newPassword')?.touched), 'touched': resetPasswordForm.get('newPassword')?.touched && resetPasswordForm.get('newPassword')?.valid }">
+                    <div class="password-input-container">
+                      <input matInput [type]="hideNP ? 'password' : 'text'" formControlName="newPassword" class="w-100 custom-input" />
+                      <button mat-icon-button matSuffix (click)="toggleNewPasswordVisibility()" [attr.aria-label]="hideNP ? 'Hide password' : 'Show password'">
+                        <mat-icon>{{ hideNP ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div *ngIf="!confirmFocused && !resetPasswordForm.valid && (password.touched || password.dirty) && !password.errors?.['required']" class="text-red-400 text-sm">
+                    <span [ngClass]="{ 'text-success': password.valid && (password.dirty || password.touched), 'touched': password.touched && password.valid }">Your password must be at least:</span>
+                    <ul class="requirement-list">
+                      <li>
+                        <mat-icon class="icon" [ngClass]="{'text-success': this.password.value?.match('^(?=.*[A-Z])')}">
+                            <i-tabler name="{{ this.password.value?.match('^(?=.*[A-Z])') ? 'check' : 'x' }}" class="icon-16 m-t-4"></i-tabler>
+                        </mat-icon>
+                        <span class="block" [ngClass]="{'text-success': this.password.value?.match('^(?=.*[A-Z])')}">one uppercase letter.</span>
+                    </li>
+                    
+                    <li>
+                      <mat-icon class="icon" [ngClass]="{'text-success': this.password.value?.match('(?=.*[a-z])')}">
+                          <i-tabler name="{{ this.password.value?.match('(?=.*[a-z])') ? 'check' : 'x' }}" class="icon-16 m-t-4"></i-tabler>
+                      </mat-icon>
+                      <span class="block" [ngClass]="{'text-success': this.password.value?.match('(?=.*[a-z])')}">one lowercase letter.</span>
+                  </li>
+                  
+                  <li>
+                      <mat-icon class="icon" [ngClass]="{'text-success': this.password.value?.match('(.*[0-9].*)')}">
+                          <i-tabler name="{{ this.password.value?.match('(.*[0-9].*)') ? 'check' : 'x' }}" class="icon-16 m-t-4"></i-tabler>
+                      </mat-icon>
+                      <span class="block" [ngClass]="{'text-success': this.password.value?.match('(.*[0-9].*)')}">one digit.</span>
+                  </li>
+                  
+                  <li>
+                      <mat-icon class="icon" [ngClass]="{'text-success': this.password.value?.match('(?=.*[!@#$%^&*])')}">
+                          <i-tabler name="{{ this.password.value?.match('(?=.*[!@#$%^&*])') ? 'check' : 'x' }}" class="icon-16 m-t-4"></i-tabler>
+                      </mat-icon>
+                      <span class="block" [ngClass]="{'text-success': this.password.value?.match('(?=.*[!@#$%^&*])')}">one special character.</span>
+                  </li>
+                  
+                  <li>
+                      <mat-icon class="icon" [ngClass]="{'text-success': this.password.value?.match('.{8,}')}">
+                          <i-tabler name="{{ this.password.value?.match('.{8,}') ? 'check' : 'x' }}" class="icon-16 m-t-4"></i-tabler>
+                      </mat-icon>
+                      <span class="block" [ngClass]="{'text-success': this.password.value?.match('.{8,}')}">8 characters long.</span>
+                  </li>
+                  
+                    </ul>
+                  </div>
+                  <div *ngIf="password.invalid && (password.dirty || password.touched)" class="error-message">{{ getNewPasswordErrorMessage() }}</div>
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block m-t-12">Confirm Password</mat-label>
+                  <div class="w-100" [ngClass]="{ 'invalid': confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched), 'touched': confirmPassword.touched && confirmPassword.valid }">
+                    <div class="password-input-container">
+                      <input matInput [type]="hideCP ? 'password' : 'text'" formControlName="confirmPassword" class="w-100 custom-input" (focus)="onFocusConfirmPassword()" (blur)="onBlurConfirmPassword()"/>
+                      <button mat-icon-button matSuffix (click)="toggleCPasswordVisibility()" [attr.aria-label]="hideCP ? 'Hide password' : 'Show password'">
+                        <mat-icon>{{ hideCP ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      </button>
+                    </div>
+                    <div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" class="error-message">{{ getConfirmPasswordErrorMessage() }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="edit-form-action">
+                <a mat-flat-button color="primary" class="m-t-12" [disabled]="!resetPasswordForm.valid" (click)="updatePassword()">Save</a>
+              </div>
+            </form>
+  
+  
+          </div>
+        </mat-tab>
+        <mat-tab *ngIf="isUserSupervisor">
+          <ng-template mat-tab-label>
+            <i-tabler name="source-code" class="icon-16"></i-tabler> <span class="navigation-label">Projects</span>
+          </ng-template>
+          <div class="projects-header">
+            <mat-form-field appearance="outline" class="m-l-12">
+              <mat-label>Filter by Session</mat-label>
+              <mat-select (selectionChange)="filterBySession($event.value)">
+                <mat-option *ngFor="let session of sessions" [value]="session.id">{{ session.name }}</mat-option>
+              </mat-select>                      
+            </mat-form-field>
+          </div>
+          <div class="projects-container">
+            <mat-card class="project-card cardWithShadow" *ngFor="let project of filteredProjects">
+              <mat-card-header>
+                <mat-card-title class="d-flex align-items-center">
+                  <div class="custom-tooltip">
+                    <a [href]="project.githubRepostoryLink" target="_blank">
+                      <img src="\..\..\..\.\assets\images\logos\github.png" alt="github logo" class="github-logo">
+                      <span class="tooltip-text">GitHub Link</span>
+                    </a>
+                  </div>
+                  {{ project.projectName }}
+                </mat-card-title>
+                <mat-card-subtitle class="m-t-8" style="margin-left: 30px;">
+                  <span class=" f-s-14 rounded p-4 p-y-4 f-w-600 text-primary bg-light-primary">{{ getTeamName(project) }}</span>
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content class="card-content">
+                <div class="row">
+                  <div class="col-lg-8">
+                    <!-- Team members -->
+                    <div *ngFor="let team of project.teams">
+                      <div class="team-members " style="margin-top: 20px;  border-right: 2px solid #e5eaef">
+                        <h3 class="d-flex m-t-8"><i-tabler name="users-group" class="icon-18" style="margin-top: 2px;"></i-tabler><span class="m-l-4">Team members:</span></h3>
+                        <ul style="padding-left: 20px;" class="m-t-12">
+                          <li *ngFor="let candidate of team.candidates" class="d-flex m-b-24 evaluator-data">
+                            <img *ngIf="candidate.picture && !candidate.picture.endsWith('/images/'); else defaultPicture" [src]="candidate.picture" class="collaborator-picture" alt="Collaborator Picture">
+                            <ng-template #defaultPicture>
+                              <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                {{ candidate.firstName?.charAt(0) | uppercase }}
+                              </div>
+                            </ng-template>
+                            <div>
+                              <span class="shadow-none f-w-600 d-block" style="margin-left: 8px;">{{ candidate.firstName }} {{ candidate.lastName }}</span>
+                              <span class="shadow-none f-w-400 d-flex align-items-center" style="margin-left: 8px;"><i-tabler name="mail-opened" class="icon-16"></i-tabler><span class="m-l-4">{{ candidate.email }}</span></span>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="technologies col-lg-4" style="margin-top: 20px;">
+                    <!-- Technologies -->
+                    <h3 class="d-flex m-t-8"><i-tabler name="code" class="icon-18" style="margin-top: 2px;"></i-tabler><span class="m-l-4">Technologies:</span></h3>
+                    <div class="d-flex align-items-center" style="margin-left: 20px;">
+                      <div *ngFor="let technology of project.technologies">
+                        <img [src]="technology.logo" alt="{{ technology.label }}" class="technology-logo" style="padding-left: 4px;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+        <mat-tab *ngIf="isUserSupervisor || isUserEvaluator">
+          <ng-template mat-tab-label>
+            <i-tabler name="clipboard-list" class="icon-16"></i-tabler> <span class="navigation-label">Evaluation History</span>
+          </ng-template>
+          <div class="projects-header">
+            <mat-form-field appearance="outline" class="m-l-12">
+              <mat-label>Filter by Session</mat-label>
+              <mat-select (selectionChange)="filterEvaluationHistoryBySession($event.value)">
+                <mat-option *ngFor="let session of sessions" [value]="session.id">{{ session.name }}</mat-option>
+              </mat-select>                      
+            </mat-form-field>
+          </div>
+          <div class="history-container">
+            <div *ngIf="evaluationHistory.length != 0">
+              <div *ngFor="let sessionArray of filteredEvaluationHistory">
+                  <mat-card  class="session-container" *ngFor="let session of sessionArray" >
+                    <h4 class="session-name">{{session.name}}</h4>
+                    <p class="m-l-24" *ngIf="session.campaigns.length === 0">No evaluation available for this session!</p>
+                    <div class="campaign-container" *ngFor="let campaign of session.campaigns" >
+                      <div class="header">
+                        <div class="campaign-info d-flex align-items-center ">
+                            <div class="campaign-name d-flex align-items-center " >
+                                <i-tabler name="calendar-code" class="icon-16" style="margin-right: 5px;"></i-tabler>
+                                <span class="f-s-14 f-w-600">{{ campaign?.name}}</span>
+                            </div>  
+                                <span  class="f-w-600 align-items-center text-error bg-light-error f-s-12 rounded  m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignFinished(campaign?.endDate)" >Finished</span>
+                                <span  class="f-w-600 align-items-center text-success bg-light-success f-s-12 rounded  m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignInProgress(campaign?.startDate, campaign?.endDate)" >In Progress</span>
+                                <span class="f-w-600 align-items-center text-accent bg-light-accentf-s-12 rounded  m-l-24" style="padding: 1px 4px;" *ngIf="isCampaignNotStartedYet(campaign?.startDate)" >Not Started Yet</span>   
+                        </div>
+                        <div class="campaign-date">
+                          <div class="date-info-start">
+                            <div class="date-circle">
+                              {{ campaign?.startDate | date: 'd' }}
+                            </div>
+                            <div class="text-date start-date">
+                              <span  class="month d-block">{{ campaign?.startDate | date: 'MMM' | uppercase }}</span>
+                              <span class="year">{{ campaign?.startDate | date: 'yyyy' }}</span>
+                            </div>
+                          
+                          </div>
+                          <div class="line"></div>
+                          <div class="date-info-end">
+                            <div class="date-circle">
+                              {{ campaign?.endDate | date: 'd' }}
+                            </div>
+                            <div class="text-date end-date">
+                              <span class="month d-block">{{ campaign?.startDate | date: 'MMM' | uppercase }}</span>
+                              <span class="year">{{ campaign?.endDate | date: 'yyyy' }}</span>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <mat-accordion>
+                        <mat-expansion-panel *ngFor="let team of campaign?.teams; let i = index; " (opened)="panelOpened(i)" (closed)="panelClosed(i)">
+                            <mat-expansion-panel-header>
+                     <mat-panel-title class="f-w-600 d-flex align-items-center">
+                      <div class="d-flex align-items-center">
+                        <i-tabler name="users-group" class="icon-18" style="margin-right: 5px;"></i-tabler>
+                        <span>{{ team.name }}</span>
+                      </div>
+                          <ul class="team-list" *ngIf="!team.panelOpen">
+                              <li class="custom-tooltip"  *ngFor="let evaluation of team.evaluations">
+                                  <div class="team-member">
+                                      <div class="team-member-image">
+                                          <img *ngIf="evaluation.candidate.picture && !evaluation.candidate.picture.endsWith('/images/'); else defaultPicture" [src]="evaluation.candidate.picture" class="candidate-picture" alt="candidate Picture">
+                                          <ng-template #defaultPicture>
+                                          <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                              {{ evaluation.candidate.firstName?.charAt(0) | uppercase }}
+                                          </div> 
+                                          </ng-template>
+                                      </div>
+                                  </div>
+                                  <span class="tooltip-text">{{evaluation.candidate.firstName}} {{evaluation.candidate.lastName}}</span>
+                              </li>
+                          </ul>
+                      </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="table-container"  style="overflow-x: auto;" >
+                              <table class="custom-table">
+                                <thead>
+                                  <tr>
+                                    <th>Candidate</th>
+                                    <th *ngFor="let criteria of evaluationCriteria">{{ criteria.name }}</th>
+                                    <th>Final Score</th>
+                                    <th>Remark</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <ng-container *ngFor="let line of team.evaluations ; let i = index">
+                                    <tr>
+                                      <td>
+                                        <div class="custom-tooltip">
+                                        <img *ngIf="line.candidate.picture && !line.candidate.picture.endsWith('/images/'); else defaultPicture" [src]="line.candidate.picture" alt="Evaluator picture" class="evaluator-picture">
+                                        <ng-template #defaultPicture>
+                                          <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                                            {{ line.candidate.firstName?.charAt(0) | uppercase }}
+                                          </div>
+                                        </ng-template>
+                                        <span class="tooltip-text-evaluator tooltip-text">{{line.candidate.firstName}} {{line.candidate.lastName}}</span>
+                                    </div>
+                                  </td>
+                                      <ng-container *ngFor="let criteria of evaluationCriteria">
+                                        <td [ngStyle]="{'background-color': !line.evaluationLine[0]?.grades.hasOwnProperty(criteria.id) ? '#f2f6fa' : 'transparent'}">{{ criteria && criteria.id && line.evaluationLine[0]?.grades[criteria.id] }}</td>
+                                      </ng-container>
+                                      <td>{{ line.evaluationLine[0].score }}</td>
+                                      <td style="max-width: 60px;">
+                                        <div class="custom-tooltip">
+                                          <button mat-icon-button color="primary" (click)="toggleRowExpansion(i)">
+                                            <mat-icon class="icon-btn">
+                                              <i-tabler name="{{ isRowExpanded(i) ? 'note-off' : 'note' }}" class="icon-20 d-flex"></i-tabler>
+                                            </mat-icon>
+                                          </button>
+                                          <span class="tooltip-text">{{ isRowExpanded(i) ? 'Hide Remark' : 'View Remark' }}</span>                              
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    <tr *ngIf="expandedRowIndices.includes(i)">
+                                      <td [attr.colspan]="columnsToDisplayWithExpand.length">
+                                        <div class="expanded-row">
+                                          <img src="/assets/images/logos/remarques.png" class="note-icon"/>
+                                          {{ line.evaluationLine[0].remark ? line.evaluationLine[0].remark : 'No remark available' }}
+                                        </div>
+                                      </td>
+                                    </tr>                                              
+                                  </ng-container>
+                                </tbody>
+                              </table>
+                            </div>
+                         
+                        </mat-expansion-panel>
+                    </mat-accordion></div>
+                  </mat-card >
+              </div>
+          </div>
+          </div>
+
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </mat-card>
+</div>
+<p-toast />

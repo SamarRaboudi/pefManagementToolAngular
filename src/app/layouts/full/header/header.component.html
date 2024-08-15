@@ -1,0 +1,243 @@
+<div *ngIf="loading" >
+  <mat-toolbar class="topbar" >
+    <!-- Mobile Menu -->
+    <button mat-icon-button (click)="toggleMobileNav.emit()" *ngIf="!showToggle">
+      <i-tabler name="menu-2" class="icon-20 d-flex"></i-tabler>
+    </button>
+  
+    <!-- --------------------------------------------------------------- -->
+  
+    <!-- --------------------------------------------------------------- -->
+    <!-- Notification Dropdown -->
+    <!-- --------------------------------------------------------------- -->
+  
+    <mat-toolbar class="topbar" >
+      <!-- Title -->
+      <mat-card-title>{{ title }}</mat-card-title>
+      <!-- Other elements in the header -->
+    </mat-toolbar>
+    
+    <span class="flex-1-auto"></span>
+  
+  
+  
+      <button mat-icon-button aria-label="Notifications">
+        <i-tabler
+        class="d-flex icon-20"
+        name="bell"
+        matBadge="0"
+        matBadgeSize="small"
+        matBadgeColor="primary"
+        ></i-tabler>
+      </button>
+  
+   
+  
+  
+  
+    <!-- --------------------------------------------------------------- -->
+    <!-- profile Dropdown -->
+    <!-- --------------------------------------------------------------- -->
+  
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="profilemenu"
+      aria-label="Notifications"
+    >
+    
+    </button>
+    <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
+      <button mat-menu-item (click)="viewAccount()">
+        <mat-icon class="d-flex align-items-center"
+          ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
+        >My Profile
+      </button>
+      <button mat-menu-item>
+        <mat-icon class="d-flex align-items-center"
+          ><i-tabler name="mail" class="icon-18 d-flex"></i-tabler></mat-icon
+        >My Account
+      </button>
+      <button mat-menu-item>
+        <mat-icon class="d-flex align-items-center"
+          ><i-tabler
+            name="list-check"
+            class="icon-18 d-flex"
+          ></i-tabler></mat-icon
+        >My Task
+      </button>
+  
+      <div class="p-x-12 m-t-12">
+        <a
+          (click)="logout()"
+          mat-stroked-button
+          color="primary"
+          class="w-100"
+          >Logout</a
+        >
+      </div>
+    </mat-menu>
+  </mat-toolbar>
+   
+</div>
+<div *ngIf="!loading">
+  <mat-toolbar class="topbar" >
+    <!-- Mobile Menu -->
+    <button mat-icon-button (click)="toggleMobileNav.emit()" *ngIf="!showToggle">
+      <i-tabler name="menu-2" class="icon-20 d-flex"></i-tabler>
+    </button>
+  
+    <!-- --------------------------------------------------------------- -->
+  
+    <!-- --------------------------------------------------------------- -->
+    <!-- Notification Dropdown -->
+    <!-- --------------------------------------------------------------- -->
+  
+    <mat-toolbar class="topbar" >
+      <!-- Title -->
+      <mat-card-title>{{ title }}</mat-card-title>
+      <!-- Other elements in the header -->
+    </mat-toolbar>
+    
+    <span class="flex-1-auto"></span>
+  
+  
+  
+    <div>
+      <button
+        mat-icon-button
+        aria-label="Notifications"
+        [matMenuTriggerFor]="notificationsMenu"
+        (click)="updateUnseenNotificationsToSeen()"
+      >
+        <i-tabler
+          class="d-flex icon-20"
+          name="bell"
+          [matBadge]="unseenNotificationsCount"
+          matBadgeSize="small"
+          matBadgeColor="primary"
+        ></i-tabler>
+      </button>
+    
+      <mat-menu #notificationsMenu="matMenu" class="topbar-dd cardWithShadow">
+        <ng-container *ngFor="let notification of notifications.slice(0, displayedNotifications)">
+          <div
+            mat-menu-item
+            style="padding-left: 8px;"
+          >
+            <div >
+              <a  class="notification-item"  (click)="markNotificationAsClicked(notification); navigateToEvaluation(notification.content.isInMyTeam ? 1 : 0, notification.content.campaign.id, notification.content.team.id)">
+                <img
+                  src="../../assets/images/icons/primary-point-filled.png"
+                  alt="User Logo"
+                  class="unclicked-notification"
+                  *ngIf="!notification.isclicked"
+                />
+                <img
+                  *ngIf="notification.content.candidate.picture"
+                  [src]="notification.content.candidate.picture"
+                  alt="Candidate Image"
+                  class="candidate-image-header"
+                />
+                <div class="notification-details">
+                  <p class="m-b-0">
+                    <strong>{{ notification.content.candidate.firstName }} {{ notification.content.candidate.lastName }}</strong>
+                    of {{ notification.content.team.name }} needs evaluation in
+                    {{ notification.content.campaign.name }} ({{ notification.content.session.name }}).
+                  </p>
+                </div>
+              </a>
+              <div class="notification-date">
+                <div class="custom-tooltip-header m-l-8">
+                  <button class="delete-notification-btn" (click)="deleteNotification(notification)">
+                    <i-tabler name="trash" class="icon-14"></i-tabler>
+                  </button>
+                  <span class="tooltip-text">Remove</span>
+                </div>
+                <span *ngIf="notification.sendingDate" style="margin-bottom: 5px;">
+                  {{ getRelativeTime(notification.sendingDate) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div>
+          <button
+            mat-menu-item
+            *ngIf="displayedNotifications < notifications.length"
+            (click)="showAllNotifications()"
+            style="padding-left: 50px; width: 100%;"
+          >
+            <span  class="show-all-notifications-btn">See previous notifications</span>
+          </button>
+        </div>
+      </mat-menu>
+    </div>
+    
+    
+
+  
+   
+  
+  
+  
+    <!-- --------------------------------------------------------------- -->
+    <!-- profile Dropdown -->
+    <!-- --------------------------------------------------------------- -->
+    <div class="d-flex align-items-center">
+      <span class="f-s-12 m-l-8">{{ user.nom?.toUpperCase() }} {{ user.prenom?.toUpperCase() }}</span>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="profilemenu"
+        aria-label="Notifications"
+        style="margin-left: 5px;"
+      >
+        <img *ngIf="user.picture && !user.picture.endsWith('/images/'); else defaultPicture"
+          [src]="user.picture"
+          class="rounded-circle object-cover"
+          width="48px"
+          height="48px"
+        />
+        <ng-template #defaultPicture >
+          <!-- Display a circled span with the first letter of the user's name -->
+          <div  style="border: 1px dashed #5d87ff; padding: 2px 1px 1px;"
+          class="rounded-circle object-cover g-light-primary text-primary shadow-none f-w-600 f-s-18"
+          width="48px" >
+            {{ user.nom?.charAt(0) | uppercase }}
+          </div>
+        </ng-template>
+      </button>
+    </div>
+
+    <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
+      <button mat-menu-item (click)="viewAccount()">
+        <mat-icon class="d-flex align-items-center"
+          ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
+        >My Profile
+      </button>
+      <button mat-menu-item>
+        <mat-icon class="d-flex align-items-center"
+          ><i-tabler name="mail" class="icon-18 d-flex"></i-tabler></mat-icon
+        >My Account
+      </button>
+      <button mat-menu-item>
+        <mat-icon class="d-flex align-items-center"
+          ><i-tabler
+            name="list-check"
+            class="icon-18 d-flex"
+          ></i-tabler></mat-icon
+        >My Task
+      </button>
+  
+      <div class="p-x-12 m-t-12">
+        <a
+          (click)="logout()"
+          mat-stroked-button
+          color="primary"
+          class="w-100"
+          >Logout</a
+        >
+      </div>
+    </mat-menu>
+  </mat-toolbar>
+  
+</div>

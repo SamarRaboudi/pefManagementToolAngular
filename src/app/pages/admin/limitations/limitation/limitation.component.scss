@@ -1,0 +1,154 @@
+.add-btn{
+    margin-bottom: 20px; 
+    padding: 20px;
+  }
+  .demo-table {
+      width: 100%;
+    }
+    
+    .mat-mdc-row .mat-mdc-cell {
+      border-bottom: 1px solid transparent;
+      border-top: 1px solid transparent;
+      cursor: pointer;
+    }
+    
+    .mat-mdc-row:hover .mat-mdc-cell {
+      border-color: #e5eaef;
+    }
+    
+    .demo-row-is-clicked {
+      font-weight: bold;
+    }
+    .column-title{
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .column-content{
+      text-align: center;
+    }
+    .technology-logo{
+      width: 30px;
+      border-radius: 5px;
+    }
+    .icon-btn{
+      font-size: 16px;
+    }
+    .icon-view-btn{
+      font-size: 20px;
+    }
+    .custom-tooltip {
+      position: relative;
+      display: inline-block;
+  }
+  
+  .custom-tooltip .tooltip-text {
+    visibility: hidden;
+    font-size: 10px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    padding: 1px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: calc(100% - 10px); 
+    left: 50%; 
+    transform: translateX(-50%); 
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap; 
+  }
+  
+  .custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  .email {
+    color: #007bff;
+    font-style: italic;
+    font-size: 0.9em;
+  }
+.circled-span {
+  border-radius: 50%;
+  width: 33px;
+  height: 33px;
+  padding: 5px 3px;
+  text-align: center;
+  margin-left: -5px;
+  cursor: pointer; 
+  transition: transform 0.3s ease; 
+}
+.circled-span:hover {
+  transform: scale(1.2);
+}
+.candidate-cell {
+  text-align: center;
+}
+
+.candidate-container {
+  display: inline-block;
+  position: relative;
+  margin-left: 5px;
+}
+
+.candidate-container img {
+  width: 30px; 
+  height: 30px; 
+  border-radius: 50%; 
+  margin-left: -5px;
+  cursor: pointer; 
+  transition: transform 0.3s ease; 
+}
+
+.candidate-container img:hover {
+  transform: scale(1.2);
+}
+
+.user-cell {
+    text-align: center;
+  }
+  
+  .user-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 5px;
+  }
+  
+  .user-container img {
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%; 
+    margin-left: -5px;
+    cursor: pointer; 
+    transition: transform 0.3s ease; 
+  }
+  
+  .user-container img:hover {
+    transform: scale(1.2);
+  }
+
+.tooltip {
+  visibility: hidden;
+  width: auto;
+  background-color: rgba(0, 0, 0, 0.75);
+  font-size: 10px;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 0px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.candidate-container:hover .tooltip {
+  visibility: visible;
+}
+.user-container:hover .tooltip {
+    visibility: visible;
+  }
+  

@@ -1,0 +1,81 @@
+<div *ngIf="loading" class="loader">
+  <!-- Add your loading indicator here -->
+  <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div *ngIf="!loading">
+  <div style="display: flex; align-items: center; justify-content: space-between ; margin-bottom: 20px;">
+    <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Search</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input type="search" matInput (input)="applyFilter($event)" >      
+        </mat-form-field>  
+        <mat-form-field style="width: 250px;" appearance="outline" class="m-l-12">
+          <mat-label>Filter by Supervisor</mat-label>
+          <mat-select (selectionChange)="filterBySupervisor($event.value)">
+            <mat-option *ngFor="let supervisor of supervisors" [value]="supervisor.id" class="d-flex align-items-center">
+              <div class="supervisor-info">
+                <img *ngIf="supervisor.picture && !supervisor.picture.endsWith('/images/'); else defaultPicture" [src]="supervisor.picture" class="collaborator-picture" alt="Collaborator Picture">
+                <ng-template #defaultPicture>
+                  <div class="circled-span bg-light-primary text-primary shadow-none f-w-600">
+                    {{ supervisor.nom?.charAt(0) | uppercase }}
+                  </div>
+                </ng-template>
+                <span style="margin-left: 5px;">{{ supervisor.nom }} {{ supervisor.prenom }}</span>
+              </div>
+            </mat-option>
+          </mat-select>        
+        </mat-form-field>
+               
+      </form>
+      <button *ngIf="isUserAdmin" mat-raised-button color="primary" class="add-btn" (click)="openAddDialog()"><span>+</span> Add Project</button>
+  </div>
+  <div>
+  <div class="container">
+    <div class="card-container">
+      <mat-card class="example-card cardWithShadow" *ngFor="let card of obs | async">
+        <mat-card-header>
+          <mat-card-title>{{card.title}}</mat-card-title>
+          <mat-card-subtitle class="m-t-4">        
+            <div style="display: flex; align-items: center;">
+              <div *ngFor="let technology of card.technologies.slice(0, 3)" >
+                <img [src]="technology.logo" alt="{{technology.label}}" class="technology-logo">
+              </div>
+              <span class="bg-light-gray text-gray rounded f-w-600 p-4 p-y-4 f-s-12" >
+                {{ card.technologies.length > 3 ? '+' + (card.technologies.length - 3) : '' }}
+              </span>
+            </div>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content class="card-content">
+          <div class="project-context">
+            <p>{{card.context}}</p>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="card-action">
+          <div class="custom-tooltip">
+            <button mat-icon-button color="primary" (click)="openViewDetailsDialog(card)">
+              <mat-icon class="icon-btn"><i-tabler name="list-details" class="icon-18 d-flex"></i-tabler></mat-icon>
+          </button>          
+            <span class="tooltip-text">View</span>
+        </div>
+          <div class="custom-tooltip" *ngIf="isUserAdmin">
+            <button mat-icon-button color="accent" (click)="openEditDialog(card)"     >
+                <mat-icon class="icon-btn"><i-tabler name="edit" class="icon-18 d-flex"></i-tabler></mat-icon>
+            </button>
+            <span class="tooltip-text">Edit</span>
+        </div>
+        <div class="custom-tooltip" *ngIf="isUserAdmin">
+              <button mat-icon-button color="warn"   (click)="openDeleteDialog(card)"  >
+                <mat-icon class="icon-btn"><i-tabler name="square-x" class="icon-18 d-flex"></i-tabler></mat-icon>
+              </button>
+          <span class="tooltip-text">Remove</span>
+        </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+  
+  <mat-paginator [pageSizeOptions]="[6, 10, 20]"></mat-paginator>
+  <p-toast />
+</div>

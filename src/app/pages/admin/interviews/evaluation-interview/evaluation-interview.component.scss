@@ -1,0 +1,96 @@
+@import '../../../../../assets/scss/_variables.scss';
+.header-action {
+  width: 100%;
+  text-align: end;
+}
+.table-container {
+  overflow-x: auto; 
+  max-width: 100%;
+  padding: 0px 0 35px;
+  margin-top: 5px;
+}
+.custom-table {
+  border-collapse: collapse;
+}
+
+.custom-table th, .custom-table td {
+  border: 5px solid $light-primary; 
+  padding: 10px 8px;
+  max-width: 100px;
+}
+.custom-table th{
+  text-align: center;
+  line-height: 1.5;
+  font-weight: 600;
+  color: $primary;
+}
+.custom-table td{
+  text-align: center;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 13px;
+}
+.remarq-icons{
+  color: $primary;
+  position: relative;
+  width: 100%;
+  padding-left: 25px;
+}
+.note-icon{
+  position: absolute;
+  left: 0px;
+  top: -17px;
+}
+input{
+  border: none;
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 400;
+}  
+textarea {
+resize: vertical;
+overflow: auto;
+border: 3px solid $light-primary; 
+}
+textarea:focus { 
+outline: none !important;
+border-color: $light-primary;
+}
+.intern-picture{
+  width: 50px;
+  height: 50px;
+  border-radius:50%
+}
+.custom-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+visibility: hidden;
+font-size: 10px;
+background-color: #555;
+color: #fff;
+text-align: center;
+border-radius: 3px;
+padding: 3px 5px;
+position: absolute;
+z-index: 1;
+bottom: calc(100% - 0px); 
+left: 50%; 
+transform: translateX(-50%); 
+opacity: 0;
+transition: opacity 0.3s;
+white-space: nowrap; 
+}
+
+.custom-tooltip:hover .tooltip-text {
+visibility: visible;
+opacity: 1;
+}
+.view-candidate-btn{
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}

@@ -1,0 +1,115 @@
+
+@import '../../../../assets/scss/_variables.scss';
+
+.leaderboard-container {
+    margin-top: 20px;
+  }
+  
+  
+  .header {
+   display: flex; 
+   align-items: center; 
+   justify-content: space-between ; 
+    margin-bottom: 15px;
+    padding-top: 5px;
+  }
+  .header-action{
+    text-align: end;
+}
+  .leaderboard{
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 20px;
+  }
+  .member-div-titles{
+    padding:5px 40px 0px;
+    border-radius: 30px;
+  }
+  .member-div{
+    padding: 5px 40px;
+    border-radius: 30px;
+    margin: 10px 0;
+  }
+  .member-div:nth-child(even) {
+    background-color: #F6F8FF; 
+}
+
+.member-div:nth-child(odd) {
+    background-color: $light-primary; 
+    color: $primary;
+}
+
+.member-data{
+    position: relative;
+}
+  .candidate-picture{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  .medal-logo{
+    width: 15px;
+    position: absolute;
+    left: 40px;
+    top: 35px;
+  }
+  .member-number{
+    font-weight: 700;
+    color: $primary;
+  }
+  .score{
+  text-align: end;
+
+  }
+  .member-div:hover{
+    background-color: #D8DFFE;
+  }
+  p{
+    font-weight: 600;
+  }
+  .charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); 
+    grid-gap: 20px; 
+}
+  .chart{
+    border: 1px solid $borderColor; 
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .chart h4{
+    text-align: center;
+  }
+  .custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+  visibility: hidden;
+  font-size: 10px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 1px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: calc(100% - 10px); 
+  left: 50%; 
+  transform: translateX(-50%); 
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+.custom-tooltip .tooltip-text-evaluator {
+  bottom: calc(100% - 0px); 
+}
+.custom-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+

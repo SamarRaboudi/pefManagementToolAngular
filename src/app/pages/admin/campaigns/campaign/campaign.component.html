@@ -1,0 +1,100 @@
+<div *ngIf="loading" class="loader">
+  <!-- Add your loading indicator here -->
+  <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>
+<div *ngIf="!loading">
+  <div class="header">
+    <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Search</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input type="search" matInput (input)="applyFilter($event)">      
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="m-l-12">
+          <mat-label>Filter by Session</mat-label>
+          <mat-select (selectionChange)="filterBySession($event.value)">
+            <mat-option *ngFor="let session of sessions" [value]="session.id">{{ session.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <button mat-raised-button color="primary" class="add-btn" (click)="openAddDialog()"><span>+</span> Create Campaign</button>
+  </div>
+
+  <div>
+    <table mat-table [dataSource]="dataSource" class="demo-table"> 
+        <!-- Weight Column -->
+        <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef  class="column-title">Name</th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">{{element.name}}</td>
+        </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="session">
+            <th mat-header-cell *matHeaderCellDef  class="column-title">Session</th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">{{element.session.name}}</td>
+            </ng-container>
+
+            <!-- Weight Column -->
+          <ng-container matColumnDef="startDate">
+            <th mat-header-cell *matHeaderCellDef  class="column-title">First Day</th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">
+              <span  class="f-w-600  f-s-12 rounded p-4 p-y-4 -flex align-items-center" ><i-tabler name="calendar-time" class="icon-12" ></i-tabler><span class="m-l-4">{{ element.startDate | date: 'yyyy-MM-dd' }}</span></span>
+            </td>
+            </ng-container>
+
+           <!-- Weight Column -->
+          <ng-container matColumnDef="endDate">
+            <th mat-header-cell *matHeaderCellDef  class="column-title">Last Day</th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">
+              <span  class="f-w-600  f-s-12 rounded p-4 p-y-4 -flex align-items-center" ><i-tabler name="calendar-time" class="icon-12" ></i-tabler><span class="m-l-4">{{ element.endDate | date: 'yyyy-MM-dd' }}</span></span>
+            </td>
+            </ng-container>
+          <!-- Weight Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="column-title">Status</th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">
+              <span class="f-w-600 f-s-12 rounded p-4 p-y-4 text-{{getStatusColor(element.isValid, element.startDate, element.endDate)}} bg-light-{{getStatusColor(element.isValid, element.startDate, element.endDate)}}">
+                {{ getStatusText(element.isValid, element.startDate, element.endDate) }}
+              </span>
+            </td>
+          </ng-container>
+          
+          
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef  class="column-title">Action</th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">
+          <div class="custom-tooltip">
+            <button mat-icon-button color="primary" [routerLink]="['/dashboard/admin/campaign', element.id]">
+              <mat-icon class="icon-btn"><i-tabler name="list-details" class="icon-18 d-flex"></i-tabler></mat-icon>
+          </button>          
+            <span class="tooltip-text">View</span>
+        </div>
+        <div class="custom-tooltip">
+              <button mat-icon-button color="warn"(click)="openDeleteDialog(element)" >
+                <mat-icon class="icon-btn"><i-tabler name="square-x" class="icon-18 d-flex"></i-tabler></mat-icon>
+              </button>
+          <span class="tooltip-text">Remove</span>
+        </div>
+        </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-row
+            (click)="clickedRows.add(row)"
+            [class.demo-row-is-clicked]="clickedRows.has(row)"
+            *matRowDef="let row; columns: displayedColumns;"
+        ></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements" style="margin-top: 20px;">
+</mat-paginator>
+</div>
+<p-toast />
+</div>
+
+    
+  
+
+  
